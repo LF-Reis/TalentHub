@@ -30,7 +30,7 @@ export default function TelaLogin(){
         secureTextEntry
         />
 
-        <TouchableOpacity style={styles.botao} onPress={fazerLogin}>
+        <TouchableOpacity style={styles.botao} onPress={() => router.push('/perfil')}>
           <Text style={styles.textoBotao}>Entrar</Text>
         </TouchableOpacity>
 
