@@ -17,9 +17,10 @@ export default function TelaCadastro(){
    
     return(
         <View style={styles.container1}>
+            
+            <View style={styles.container2}>
             <Text style={styles.titulo}>Crie sua Conta</Text>
             <Text style={styles.subTitulo}>Comece sua jornada profissional hoje!</Text>
-            <View style={styles.container2}>
                 <TextInput
                         style={styles.input}
                         placeholder="Nome"
@@ -80,27 +81,28 @@ const styles = StyleSheet.create({
   container1:{
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#0A66C2',
   },
   container2:{
     backgroundColor: '#fff',
-    borderRadius: 6,
+    borderRadius: 50,
+    height: 600,
     padding:20,
     elevation: 4,
+    marginBottom: -300,
   },
   titulo:{
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#333',
+    color: '#191919',
   },
   subTitulo:{
     fontSize: 16,
     fontWeight: "500",
     textAlign: "center",
     marginBottom: 10,
-    color: '#6c6c6c',
+    color: '#191919',
   },
   input:{
     backgroundColor: '#fff',
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   botao:{
-    backgroundColor: "#1b8151",
+    backgroundColor: "#0A66C2",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   textoSecundario:{
-    color: '#1b8151',
+    color: '#0A66C2',
     fontSize: 18,
   },
   botaoSecundario:{
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   botaoSelecionado:{
-    borderColor: '#1b8151',
+    borderColor: '#0A66C2',
     backgroundColor: '#f4fdf8'
   },
   textOpcao:{
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   textoSelecionado:{
-    color: '#1b8151',
+    color: '#0A66C2',
     fontWeight: 'bold'
   }
 })

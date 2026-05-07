@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     },
     card:{
         flexDirection:'row',
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#ffffff",
         borderRadius: 15,
         padding: 15,
         marginHorizontal: 20,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },
     header:{
         height:150,
-        backgroundColor: "#1b8151",
+        backgroundColor: "#0A66C2",
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         elevation: 3,
@@ -99,15 +99,15 @@ const styles = StyleSheet.create({
     tag:{
         paddingHorizontal: 10,
         borderWidth: 1,
-        borderColor: '#145c0276',
+        borderColor: '#0A66C2',
         borderRadius: 20,
-        backgroundColor: '#33ff001f',
+        backgroundColor: '#0a66c21d',
         alignItems: 'center',
         margin: 5,
     },
     tagName:{
         fontSize: 12,
-        color: '#145C02'
+        color: '#0A66C2'
     },
     image:{
         flexDirection: 'row',

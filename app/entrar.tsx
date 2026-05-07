@@ -13,9 +13,10 @@ export default function TelaLogin(){
   }
   return(
     <View style={styles.container1}>
+      
+      <View style={styles.container2}>
       <Text style={styles.titulo}>TalentHub</Text>
       <Text style={styles.subTitulo}>Entre para encontrar sua próxima oportunidade</Text>
-      <View style={styles.container2}>
         <TextInput
         style={styles.input}
         placeholder="Digite seu Email"
@@ -46,49 +47,52 @@ const styles = StyleSheet.create({
   container1:{
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#0A66C2',
   },
   container2:{
-    backgroundColor: '#fff',
-    borderRadius: 6,
+    backgroundColor: '#F3F2EF',
+    borderRadius: 50,
     padding:20,
+    height:600,
     elevation: 4,
+    marginBottom: -300,
   },
   titulo:{
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#333',
+    color: '#191919',
+    marginTop: 30,
   },
   subTitulo:{
     fontSize: 16,
     fontWeight: "normal",
     textAlign: "center",
-    marginBottom: 40,
-    color: '#6c6c6c',
+    marginBottom: 30,
+    color: '#191919',
   },
   input:{
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 15,
-    borderRadius: 8,
-    marginBottom:15,
+    borderRadius: 10,
+    marginTop:20,
     fontSize: 14,
   },
   botao:{
-    backgroundColor: "#1b8151",
+    backgroundColor: "#0A66C2",
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: "center",
+    marginTop: 20,
   },
   textoBotao:{
     color: "white",
     fontSize: 18,
   },
   textoSecundario:{
-    color: '#1b8151',
+    color: '#0A66C2',
     fontSize: 18,
   },
   botaoSecundario:{
