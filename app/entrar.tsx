@@ -19,14 +19,14 @@ export default function TelaLogin(){
       <Text style={styles.subTitulo}>Entre para encontrar sua próxima oportunidade</Text>
         <TextInput
         style={styles.input}
-        placeholder="Digite seu Email"
+        placeholder="seu@email.com"
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"/>
 
         <TextInput
         style={styles.input}
-        placeholder="Digite sua Senha"
+        placeholder="Senha"
         onChangeText={setSenha}
         secureTextEntry
         />
@@ -76,20 +76,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 20,
     marginTop:20,
     fontSize: 14,
   },
   botao:{
     backgroundColor: "#0A66C2",
     padding: 15,
-    borderRadius: 10,
+    height: 60,
+    borderRadius: 20,
     alignItems: "center",
+    justifyContent: 'center',
     marginTop: 20,
   },
   textoBotao:{
     color: "white",
-    fontSize: 18,
+    fontSize: 20,
   },
   textoSecundario:{
     color: '#0A66C2',

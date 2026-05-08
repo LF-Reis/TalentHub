@@ -1,5 +1,10 @@
+import Perfil from "@/src/componentes/avatar";
+import Card from "@/src/componentes/cardInfo";
+import Tag from "@/src/componentes/tag";
 import { useRouter } from "expo-router";
+import { Component } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
 
 export default function telaPerfil(){
 
@@ -13,52 +18,51 @@ export default function telaPerfil(){
             <View style={styles.header}> 
                 <View style={styles.container1}>
                     <TouchableOpacity style={styles.botao} onPress={() => router.push('/entrar')}>
-                        <Text style={styles.sair}>Sair</Text>
+                        <Text style={styles.sair}>Voltar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.botao} onPress={() => router.push('/entrar')}>
-                        <Text style={styles.sair}>Voltar</Text>
+                        <Text style={styles.sair}>Sair</Text>
                     </TouchableOpacity>
                 </View>
                 
                 <View style={styles.card}>
-                    <Image style={styles.image} source={{uri: "https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg",}}></Image>
-                    <View style = {styles.direction}>
-                        <Text style={styles.nome}>Luiz Felipe</Text>
-                        <Text style={styles.email}>Luiz@gmail.com</Text>
-                        <View style={styles.tag}>
-                            <Text style={styles.tagName}>Candidato</Text>
-                        </View>
-                    </View>
-                </View>
+                        <Perfil 
+                        image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg" 
+                        nome="Luiz Felipe"
+                        email="Luiz@gmail.com"/>
+                    <View style={styles.linha}></View>
 
-                <View style = {styles.card}>
-                    <View style={styles.direction}>
+                    <View style={styles.card1}>
                         <Text style={styles.nome}>Sobre mim</Text>
-                        <Text>
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Facere nobis, impedit eos ex laborum facilis, in ea corrupti cumque ab esse!
-                            Eveniet quas porro maiores quo ducimus numquam natus atque?
-                        </Text>
-                    </View>
-                </View>
-                <View style = {styles.card}>
-                    <View style={styles.direction}>
+                            <Text>
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                                Facere nobis, impedit eos ex laborum facilis, in ea corrupti cumque ab esse!
+                                Eveniet quas porro maiores quo ducimus numquam natus atque?
+                            </Text>
+                        <View style={styles.linha}></View>
                         <Text style={styles.nome}>Habilidades</Text>
                         <View style={styles.badge}>
-                            <View style={styles.tag}>
-                                <Text style={styles.tagName}>React</Text>
-                            </View>
-                            <View style={styles.tag}>
-                                <Text style={styles.tagName}>TypeScript</Text>
-                            </View>
-                            <View style={styles.tag}>
-                                <Text style={styles.tagName}>Node.js</Text>
-                            </View>
-                            <View style={styles.tag}>
-                                <Text style={styles.tagName}>Figma</Text>
-                            </View>
+                            <Tag nomeTag="React"/>
+                            <Tag nomeTag="Figma"/>
+                            <Tag nomeTag="Node.js"/>
+                            <Tag nomeTag="Typescript"/>
                         </View>
                     </View>
+                </View>
+                <View style={styles.card}>
+                    <Text style={styles.nome}>Experiências</Text>
+                    <Card 
+                    titulo="Estagiário de Desenvolvimento"
+                    subTitulo="TechStart inc."
+                    periodo="Jan 2025 - Presencial"
+                    descricao="Desenvolvimento de features em React e Typescript"/>
+                </View>
+                <View style={styles.card}>
+                    <Text style={styles.nome}>Formação</Text>
+                    <Card
+                    titulo="Bacharelado em Ciência da Computação"
+                    subTitulo="Universidade Federal de Minas Gerais"
+                    periodo="2021 - 2026"/>
                 </View>
             </View>
         </ScrollView>
@@ -73,8 +77,15 @@ const styles = StyleSheet.create({
         marginTop: 30,
         flexDirection: 'row',
     },
+    linha:{
+        height: 1,
+        backgroundColor: '#bcbaba',
+        marginTop: 5,
+    },
+    card1:{
+        marginBottom:5,
+    },
     card:{
-        flexDirection:'row',
         backgroundColor: "#ffffff",
         borderRadius: 15,
         padding: 15,
@@ -92,41 +103,12 @@ const styles = StyleSheet.create({
     badge:{
         flexDirection:'row',
     },
-    direction:{
-        marginLeft: 5,
-        justifyContent: 'center',
-    },
-    tag:{
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: '#0A66C2',
-        borderRadius: 20,
-        backgroundColor: '#0a66c21d',
-        alignItems: 'center',
-        margin: 5,
-    },
-    tagName:{
-        fontSize: 12,
-        color: '#0A66C2'
-    },
-    image:{
-        flexDirection: 'row',
-        borderRadius: 30,
-        borderColor:'red',
-        borderWidth:2,
-        width: 55,
-        height: 55,
-        resizeMode: "contain",
-    },
     nome:{
-        marginBottom: 3,
+        paddingTop: 5,
+        paddingLeft: 5,
+        marginBottom: 5,
         fontWeight: 'bold',
         fontSize: 18,
-
-    },
-    email:{
-        fontWeight: "200",
-        fontSize: 13,
     },
     botao:{
 
