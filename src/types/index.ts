@@ -14,3 +14,12 @@ export type CardProps = {
     periodo: string;
     descricao?: string;
 }
+
+export type VagaProps = {
+    image: string;
+    titulo: string;
+    subtitulo: string;
+    candidato: string;
+    localizacao: string;
+    pagamento: string;
+}

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function TelaLogin(){
   const [email, setEmail] = useState('');
@@ -13,7 +13,6 @@ export default function TelaLogin(){
   }
   return(
     <View style={styles.container1}>
-      
       <View style={styles.container2}>
       <Text style={styles.titulo}>TalentHub</Text>
       <Text style={styles.subTitulo}>Entre para encontrar sua próxima oportunidade</Text>
@@ -31,7 +30,7 @@ export default function TelaLogin(){
         secureTextEntry
         />
 
-        <TouchableOpacity style={styles.botao} onPress={() => router.push('/perfil')}>
+        <TouchableOpacity style={styles.botao} onPress={() => router.push('/home')}>
           <Text style={styles.textoBotao}>Entrar</Text>
         </TouchableOpacity>
 

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function TelaCadastro(){
     const[nome, setNome] = useState('' );
@@ -83,8 +83,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#0A66C2',
   },
+  image:{
+    width: 55,
+    height: 55,
+  },
   container2:{
-    backgroundColor: '#fff',
+    backgroundColor: '#F3F2EF',
     borderRadius: 50,
     height: 600,
     padding:20,
@@ -102,6 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     marginBottom: 10,
+    marginTop: 10,
     color: '#191919',
   },
   input:{
@@ -109,14 +114,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 15,
-    borderRadius: 8,
-    marginBottom:15,
+    borderRadius: 20,
+    marginTop:20,
     fontSize: 14,
   },
   botao:{
     backgroundColor: "#0A66C2",
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 20,
     alignItems: "center",
   },
   textoBotao:{
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderWidth:1.5,
     borderColor: "#dcdcdc",
-    borderRadius: 12,
+    borderRadius: 20,
     alignItems: 'center',
     backgroundColor: '#fff',
   },
