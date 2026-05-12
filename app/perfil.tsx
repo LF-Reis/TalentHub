@@ -1,8 +1,8 @@
-import Perfil from "@/src/componentes/avatar";
+import Avatar from "@/src/componentes/avatar";
+import Perfil from "@/src/componentes/avatarInfo";
 import Card from "@/src/componentes/cardInfo";
 import Tag from "@/src/componentes/tag";
 import { useRouter } from "expo-router";
-import { Component } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
@@ -26,10 +26,13 @@ export default function telaPerfil(){
                 </View>
                 
                 <View style={styles.card}>
+                    <View style={styles.badge}>
+                        <Avatar
+                        image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg"/>
                         <Perfil 
-                        image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg" 
                         nome="Luiz Felipe"
                         email="Luiz@gmail.com"/>
+                    </View>
                     <View style={styles.linha}></View>
 
                     <View style={styles.card1}>
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
     linha:{
         height: 1,
         backgroundColor: '#bcbaba',
-        marginTop: 5,
+        marginTop: 10,
     },
     card1:{
         marginBottom:5,

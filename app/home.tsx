@@ -1,3 +1,6 @@
+import Avatar from "@/src/componentes/avatar";
+import Card from "@/src/componentes/cardInfo";
+import Tag from "@/src/componentes/tag";
 import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -27,6 +30,56 @@ export default function telaInicial(){
             </View>
             <View style={styles.cardHome}>
 
+                    <TouchableOpacity style={styles.card}>
+                    <Avatar image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg"/>
+                    <Card 
+                    titulo="Desenvolvedor Front-end júnior"
+                    subTitulo="TechCorp"
+                    cidade="Almenara - MG"
+                    quantidade="15 candidatos"
+                    pagamento="R$ 1.500,00 - R$ 3.000,00"/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.card}>
+                    <Avatar image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg"/>
+                    <Card 
+                    titulo="Desenvolvedor Front-end júnior"
+                    subTitulo="TechCorp"
+                    cidade="Almenara - MG"
+                    quantidade="15 candidatos"
+                    pagamento="R$ 1.500,00 - R$ 3.000,00"/>
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity style={styles.card}>
+                    <Avatar image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg"/>
+                    <Card 
+                    titulo="Desenvolvedor Front-end júnior"
+                    subTitulo="TechCorp"
+                    cidade="Almenara - MG"
+                    quantidade="15 candidatos"
+                    pagamento="R$ 1.500,00 - R$ 3.000,00"/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.card}>
+                    <Avatar image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg"/>
+                    <Card 
+                    titulo="Desenvolvedor Front-end júnior"
+                    subTitulo="TechCorp"
+                    cidade="Almenara - MG"
+                    quantidade="15 candidatos"
+                    pagamento="R$ 1.500,00 - R$ 3.000,00"/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.card}>
+                    <Avatar image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg"/>
+                    <Card 
+                    titulo="Desenvolvedor Front-end júnior"
+                    subTitulo="TechCorp"
+                    cidade="Almenara - MG"
+                    quantidade="15 candidatos"
+                    pagamento="R$ 1.500,00 - R$ 3.000,00"/>
+                    </TouchableOpacity>
             </View>
         </ScrollView>
     )
@@ -41,7 +94,17 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     cardHome:{
-        
+        marginBottom:10,
+    },
+    card:{
+        backgroundColor: "#ffffff",
+        borderRadius: 15,
+        padding: 15,
+        marginHorizontal: 20,
+        marginTop: 10,
+        marginBottom: 10,
+        elevation: 10,
+        flexDirection: 'row',
     },
     welcome:{
         fontSize: 18,

@@ -1,45 +1,32 @@
-import { View, Text, Image, StyleSheet } from "react-native";       
-import { PerfilProps } from "../types";
-import Tag from "./tag";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { AvatarProps } from "../types";
 
-
-export default function Perfil({image, nome, email}:PerfilProps){
+export default function Avatar({image}:AvatarProps){
     return(
-        <View style={styles.perfil}>
-            <Image style={styles.image} source={{uri: image}}/>
-            <View style = {styles.direction}>
-                <Text style={styles.nome}>{nome}</Text>
-                <Text style={styles.email}>{email}</Text>
-            </View>
-        </View> 
+      <View style={styles.container}>
+        <Image
+          style={styles.imagem}
+          source={{
+            uri:image,
+          }}
+        />
+      </View>
     )
 }
+
 const styles = StyleSheet.create({
-    perfil:{
-        flexDirection:'row',
-        marginBottom: 10,
+    container:{
+    borderWidth: 3,
+    borderColor: "#0080ff",
+    borderRadius: 50,
+    width: 60,
+    height: 60,
+    overflow: "hidden",
     },
-    direction:{
-        marginLeft: 5,
-        justifyContent: 'center',
-    },
-    image:{
-        flexDirection: 'row',
-        borderRadius: 30,
-        borderColor:'#0080ff',
-        borderWidth:2,
+    imagem:{
         width: 55,
         height: 55,
         resizeMode: "contain",
-    },
-    nome:{
-        marginBottom: 3,
-        fontWeight: 'bold',
-        fontSize: 18,
 
-    },
-    email:{
-        fontWeight: "200",
-        fontSize: 13,
     },
 })

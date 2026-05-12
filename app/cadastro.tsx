@@ -63,7 +63,7 @@ export default function TelaCadastro(){
                 </View>
 
 
-                <TouchableOpacity style={styles.botao} onPress={fazerCadastro}>
+                <TouchableOpacity style={styles.botao} onPress={() => router.push('/perfil')}>
                           <Text style={styles.textoBotao}>Criar Conta</Text>
                         </TouchableOpacity>
                 

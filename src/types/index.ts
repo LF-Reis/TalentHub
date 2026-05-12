@@ -2,8 +2,7 @@ export type TagProps = {
     nomeTag: string;
 }
 
-export type PerfilProps = {
-    image: string;
+export type PerfilinfoProps = {
     nome: string;
     email: string;
 }
@@ -11,7 +10,10 @@ export type PerfilProps = {
 export type CardProps = {
     titulo: string;
     subTitulo: string;
-    periodo: string;
+    quantidade?: string;
+    cidade?: string;
+    pagamento?: string;
+    periodo?: string;
     descricao?: string;
 }
 
@@ -22,4 +24,9 @@ export type VagaProps = {
     candidato: string;
     localizacao: string;
     pagamento: string;
+}
+
+export type AvatarProps ={
+    image: string;
+
 }
