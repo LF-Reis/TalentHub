@@ -13,14 +13,14 @@ const styles = StyleSheet.create({
     tag:{
         paddingHorizontal: 10,
         borderWidth: 1,
-        borderColor: '#0A66C2',
+        borderColor: '#004182',
         borderRadius: 20,
-        backgroundColor: '#0a66c21d',
+        backgroundColor: '#004182bd',
         alignItems: 'center',
         margin: 5,
     },
     tagName:{
-        fontSize: 12,
-        color: '#0A66C2'
+        fontSize: 15,
+        color: '#e0e0e0'
     },
 })

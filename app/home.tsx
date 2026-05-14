@@ -1,6 +1,5 @@
 import Avatar from "@/src/componentes/avatar";
 import Card from "@/src/componentes/cardInfo";
-import Tag from "@/src/componentes/tag";
 import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -26,11 +25,14 @@ export default function telaInicial(){
                     <TextInput style={styles.input}
                     placeholder="Buscar vagas, empresas, áreas..."
                     autoCapitalize="none"/>
-                </View>
+                </View>  
             </View>
+            <Text style={styles.titulo}>
+                5 Vagas disponíveis
+            </Text>
             <View style={styles.cardHome}>
 
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={() => router.push('/jobInfo')} >
                     <Avatar image="https://i.pinimg.com/1200x/36/03/b3/3603b3e22904f3ddda3271fda9e4e8d9.jpg"/>
                     <Card 
                     titulo="Desenvolvedor Front-end júnior"
@@ -92,6 +94,12 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         elevation: 3,
+    },
+    titulo:{
+        padding:10,
+        marginLeft:13,
+        fontWeight: 'bold',
+        fontSize: 16,  
     },
     cardHome:{
         marginBottom:10,
