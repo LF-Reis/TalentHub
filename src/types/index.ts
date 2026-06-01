@@ -1,32 +1,32 @@
 export type TagProps = {
-    nomeTag: string;
-}
+  nomeTag: string;
+};
 
 export type PerfilinfoProps = {
-    nome: string;
-    email: string;
-}
+  nome: string;
+  email: string;
+};
 
 export type CardProps = {
-    titulo: string;
-    subTitulo: string;
-    quantidade?: string;
-    cidade?: string;
-    pagamento?: string;
-    periodo?: string;
-    descricao?: string;
-}
+  titulo: string;
+  subTitulo: string;
+  quantidade?: string;
+  cidade?: string;
+  pagamento?: string;
+  periodo?: string;
+  descricao?: string;
+};
+
+export type AvatarProps = {
+  image: string;
+};
 
 export type VagaProps = {
-    image: string;
-    titulo: string;
-    subtitulo: string;
-    candidato: string;
-    localizacao: string;
-    pagamento: string;
-}
-
-export type AvatarProps ={
-    image: string;
-
-}
+  id: string;
+  image: string;
+  titulo: string;
+  subtitulo: string;
+  candidato: string;
+  localizacao: string;
+  pagamento: string;
+};

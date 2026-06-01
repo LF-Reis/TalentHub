@@ -1,32 +1,30 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { AvatarProps } from "../types";
 
-export default function Avatar({image}:AvatarProps){
-    return(
-      <View style={styles.container}>
-        <Image
-          style={styles.imagem}
-          source={{
-            uri:image,
-          }}
-        />
-      </View>
-    )
+export default function Avatar({ image }: AvatarProps) {
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.imagem}
+        source={{ uri: image }}
+        resizeMode="cover"
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container:{
-    borderWidth: 3,
-    borderColor: "#0080ff",
-    borderRadius: 50,
-    width: 60,
-    height: 60,
+  container: {
+    width: 56,
+    height: 56,
+    borderRadius: 28, 
+    borderWidth: 2,
+    borderColor: "#0A66C2",
     overflow: "hidden",
-    },
-    imagem:{
-        width: 55,
-        height: 55,
-        resizeMode: "contain",
-
-    },
-})
+    backgroundColor: '#E0E0E0', 
+  },
+  imagem: {
+    width: '100%',
+    height: '100%',
+  },
+});

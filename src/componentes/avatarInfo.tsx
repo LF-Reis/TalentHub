@@ -1,35 +1,29 @@
-import { View, Text, Image, StyleSheet } from "react-native";       
+import { View, Text, StyleSheet } from "react-native";      
 import { PerfilinfoProps } from "../types";
-import Tag from "./tag";
 
-
-export default function Perfil({nome, email}:PerfilinfoProps){
-    return(
-        <View style={styles.perfil}>
-            <View style = {styles.direction}>
-                <Text style={styles.nome}>{nome}</Text>
-                <Text style={styles.email}>{email}</Text>
-            </View>
-        </View> 
-    )
+export default function Perfil({ nome, email }: PerfilinfoProps) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.nome} numberOfLines={1}>{nome}</Text>
+      <Text style={styles.email} numberOfLines={1}>{email}</Text>
+    </View> 
+  );
 }
-const styles = StyleSheet.create({
-    perfil:{
-        flexDirection:'row',
-        marginBottom: 10,
-    },
-    direction:{
-        marginLeft: 5,
-        justifyContent: 'center',
-    },
-    nome:{
-        marginBottom: 3,
-        fontWeight: 'bold',
-        fontSize: 18,
 
-    },
-    email:{
-        fontWeight: "200",
-        fontSize: 13,
-    },
-})
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    flex: 1,
+  },
+  nome: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#191919',
+    marginBottom: 2,
+  },
+  email: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: '#666666',
+  },
+});
