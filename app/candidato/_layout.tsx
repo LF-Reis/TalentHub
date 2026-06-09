@@ -7,7 +7,7 @@ export default function LayoutCandidato() {
   const telaAtual = segments[segments.length - 1];
   
   let aba: 'inicio' | 'candidaturas' | 'perfil' = 'inicio';
-  if (telaAtual === 'candidaturas') aba = 'candidaturas';
+  if (telaAtual === 'candidatura') aba = 'candidaturas';
   if (telaAtual === 'perfil') aba = 'perfil';
 
   return (
