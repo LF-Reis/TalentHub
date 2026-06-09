@@ -1,137 +1,96 @@
-import { useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
+import { useRouter, Href } from "expo-router";
+import Input from "@/src/componentes/ui/Input";
+import Button from "@/src/componentes/ui/Button";
 
-export default function TelaLogin() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-
+export default function TelaEntrar() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [tipoUsuario, setTipoUsuario] = useState<"candidato" | "empresa">("candidato");
 
-  function fazerLogin() {
-    if (!email || !senha) {
-      alert("Preencha todos os campos!");
-      return;
+  function handleLogin() {
+    if (!email || !senha) return Alert.alert("Erro", "Preencha tudo.");
+    
+    if (tipoUsuario === "empresa") {
+      router.replace("/empresa/dashboard" as Href);
+    } else {
+      router.replace("/home" as Href);
     }
-    console.log("Tentando logar com:", email, senha);
-    router.replace('/sistema/home');
   }
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
-      style={styles.container}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer} bounces={false}>
-        <View style={styles.headerArea}>
-          <Text style={styles.logoText}>TalentHub</Text>
-        </View>
-
-        <View style={styles.formContainer}>
-          <Text style={styles.titulo}>Bem-vindo de volta</Text>
-          <Text style={styles.subTitulo}>Entre para encontrar sua próxima oportunidade local</Text>
-
-          <TextInput
-            style={styles.input}
-            placeholder="Seu e-mail"
-            placeholderTextColor="#999"
-            onChangeText={setEmail}
-            value={email}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Sua senha"
-            placeholderTextColor="#999"
-            onChangeText={setSenha}
-            value={senha}
-            secureTextEntry
-          />
-
-          <TouchableOpacity style={styles.botaoPrincipal} onPress={fazerLogin}>
-            <Text style={styles.textoBotaoPrincipal}>Entrar</Text>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.titulo}>TalentHub</Text>
+        
+        <View style={styles.seletor}>
+          <TouchableOpacity style={[styles.aba, tipoUsuario === 'candidato' && styles.ativoC]} onPress={() => setTipoUsuario('candidato')}>
+            <Text style={[styles.txtAba, tipoUsuario === 'candidato' && styles.txtAtivo]}>Candidato</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity style={styles.botaoSecundario} onPress={() => router.push('/auth/cadastro')}>
-            <Text style={styles.textoBotaoSecundario}>Não tem uma conta? Cadastre-se</Text>
+          <TouchableOpacity style={[styles.aba, tipoUsuario === 'empresa' && styles.ativoE]} onPress={() => setTipoUsuario('empresa')}>
+            <Text style={[styles.txtAba, tipoUsuario === 'empresa' && styles.txtAtivo]}>Empresa</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+        <Input label="E-mail" value={email} onChangeText={setEmail} autoCapitalize="none" />
+        <Input label="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
+        
+        <Button title="Entrar" style={tipoUsuario === 'empresa' ? { backgroundColor: '#191919' } : { backgroundColor: '#0A66C2' }} onPress={handleLogin} />
+        
+        <TouchableOpacity style={{ marginTop: 12 }} onPress={() => router.push("/cadastro" as Href)}>
+          <Text style={{ color: '#666', fontSize: 13 }}>Não tem conta? <Text style={{ color: '#0A66C2', fontWeight: 'bold' }}>Cadastre-se</Text></Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A66C2',
+    backgroundColor: "#F3F2EF",
+    justifyContent: "center",
+    padding: 20,
   },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'space-between',
-  },
-  headerArea: {
-    flex: 0.4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: '#FFF',
-  },
-  formContainer: {
-    flex: 0.6,
-    backgroundColor: '#F3F2EF',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    paddingBottom: 40,
+  card: {
+    backgroundColor: "#FFF",
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
   },
   titulo: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#191919',
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#191919",
+    marginBottom: 20,
   },
-  subTitulo: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 32,
-    marginTop: 6,
-    color: '#666',
+  seletor: {
+    flexDirection: "row",
+    backgroundColor: "#EAEAEA",
+    borderRadius: 8,
+    padding: 4,
+    marginBottom: 20,
   },
-  input: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    fontSize: 15,
+  aba: { 
+    flex: 1, 
+    paddingVertical: 10, 
+    alignItems: "center", 
+    borderRadius: 6 
   },
-  botaoPrincipal: {
-    backgroundColor: "#0A66C2",
-    padding: 16,
-    borderRadius: 12,
-    alignItems: "center",
-    marginTop: 10,
+  ativoC: { 
+    backgroundColor: "#0A66C2" 
   },
-  textoBotaoPrincipal: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: 'bold',
+  ativoE: { 
+    backgroundColor: "#191919" 
   },
-  botaoSecundario: {
-    alignItems: 'center',
-    marginTop: 24,
+  txtAba: { 
+    fontSize: 13, 
+    color: "#555" 
   },
-  textoBotaoSecundario: {
-    color: '#0A66C2',
-    fontSize: 15,
-    fontWeight: '500',
-  }
+  txtAtivo: { 
+    color: "#FFF", 
+    fontWeight: "bold" 
+  },
 });
