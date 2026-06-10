@@ -33,17 +33,17 @@ export default function Footer({ abaAtiva, tipoUsuario }: FooterProps) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.botaoMenu} onPress={() => router.replace('/home' as Href)}>
+      <TouchableOpacity style={styles.botaoMenu} onPress={() => router.replace('/candidato/home' as Href)}>
         <Text style={[styles.emojiMenu, abaAtiva !== 'inicio' && styles.emojiInativo]}>🏠</Text>
         <Text style={[styles.textoMenu, abaAtiva === 'inicio' && styles.textoAtivo]}>Início</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.botaoMenu} onPress={() => router.replace('/candidatura' as Href)}>
+      <TouchableOpacity style={styles.botaoMenu} onPress={() => router.replace('/candidato/candidatura' as Href)}>
         <Text style={[styles.emojiMenu, abaAtiva !== 'candidaturas' && styles.emojiInativo]}>💼</Text>
         <Text style={[styles.textoMenu, abaAtiva === 'candidaturas' && styles.textoAtivo]}>Candidaturas</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.botaoMenu} onPress={() => router.replace('/perfil' as Href)}>
+      <TouchableOpacity style={styles.botaoMenu} onPress={() => router.replace('/candidato/perfil' as Href)}>
         <Text style={[styles.emojiMenu, abaAtiva !== 'perfil' && styles.emojiInativo]}>👤</Text>
         <Text style={[styles.textoMenu, abaAtiva === 'perfil' && styles.textoAtivo]}>Perfil</Text>
       </TouchableOpacity>

@@ -34,7 +34,7 @@ export default function HomeCandidato() {
 
         <Text style={styles.tituloSecao}>Filtrar por Tipo</Text>
         <View style={styles.containerFiltros}>
-          {['CLT', 'Estágio', 'Remoto'].map((tipo) => (
+          {['Todos', 'CLT', 'Estágio', 'Remoto'].map((tipo) => (
             <TouchableOpacity 
               key={tipo}
               style={[styles.botaoFiltro, filtroTipo === tipo && styles.botaoFiltroAtivo]}
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF', 
     padding: 12, 
     borderRadius: 10, 
-    marginTop: 16, 
-    fontSize: 14,
+    marginBottom: 15, 
+    fontSize: 18,
   },
   corpo: { 
     padding: 20, 
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   containerFiltros: { 
     flexDirection: 'row', 
     gap: 8, 
-    marginBottom: 20 
+    marginBottom: 20, 
   },
   botaoFiltro: { 
     backgroundColor: '#FFF', 
@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
   },
   tituloSecao: {
     fontWeight: 'bold',
-    fontSize: 15,  
+    fontSize: 20,  
     color: '#191919',
-    marginBottom: 10,
+    marginBottom: 20,
   },
 });

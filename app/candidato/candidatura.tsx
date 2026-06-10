@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start', 
 },
   textoStatus: { 
-    fontSize: 11, 
+    fontSize: 14, 
     fontWeight: 'bold', 
 },
   topoCard: { 
@@ -73,16 +73,16 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   nomeVaga: { 
-    fontSize: 15, 
+    fontSize: 22, 
     fontWeight: 'bold', 
     color: '#191919' 
   },
   dataEnvio: { 
-    fontSize: 11, 
+    fontSize: 14, 
     color: '#999' 
   },
   nomeEmpresa: { 
-    fontSize: 13, 
+    fontSize: 16, 
     color: '#666', 
     marginTop: 2, 
     marginBottom: 12 

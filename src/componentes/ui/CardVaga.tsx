@@ -30,12 +30,12 @@ const styles = StyleSheet.create({
     marginBottom: 12 
   },
   titulo: { 
-    fontSize: 16, 
+    fontSize: 22, 
     fontWeight: "bold", 
     color: "#191919" 
   },
   subinfo: { 
-    fontSize: 13, 
+    fontSize: 16, 
     color: "#666", 
     marginTop: 2 
   },
@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   local: { 
-    fontSize: 12, 
+    fontSize: 14, 
     color: "#555" 
   },
   tag: {
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: "bold",
     color: "#0A66C2",
     backgroundColor: "#E8F4FF",

@@ -15,7 +15,7 @@ export default function Header({ titulo, subtitulo, theme = 'blue' }: HeaderProp
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#0A66C2",
-    paddingTop: 50,
+    paddingTop: 65,
     paddingHorizontal: 20,
     paddingBottom: 24,
     borderBottomLeftRadius: 16,
@@ -25,12 +25,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#191919" 
   },
   titulo: { 
-    fontSize: 22, 
+    fontSize: 30, 
     fontWeight: "bold", 
     color: "#FFF" 
   },
   subtitulo: { 
-    fontSize: 13, 
+    fontSize: 15, 
     color: "#E8F4FF", 
     marginTop: 4, 
     opacity: 0.9 
