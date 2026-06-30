@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useRouter, Href } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
-
+import { supabase } from "@/src/lib/supabase"; 
 export default function TelaCadastro() {
   const router = useRouter();
   const [perfil, setPerfil] = useState<"CANDIDATO" | "EMPRESA">("CANDIDATO");
+  const [carregando, setCarregando] = useState(false);
   
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -17,12 +18,37 @@ export default function TelaCadastro() {
   const [razaoSocial, setRazaoSocial] = useState("");
   const [ramoAtuacao, setRamoAtuacao] = useState("");
 
-  function handleConcluir() {
+  async function handleConcluir() {
     if (!nome || !email || !senha) return Alert.alert("Erro", "Preencha os dados básicos.");
     if (perfil === "EMPRESA" && (!cnpj || !razaoSocial)) return Alert.alert("Erro", "CNPJ e Razão Social são obrigatórios.");
+    if (senha.length < 6) return Alert.alert("Erro", "A senha precisa ter no mínimo 6 caracteres.");
 
-    Alert.alert("Sucesso", "Conta criada! Faça login para entrar.");
-    router.replace("/auth/entrar" as Href);
+    setCarregando(true);
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: senha,
+        options: {
+          data: {
+            display_name: nome,
+            role: perfil,
+            cnpj: perfil === "EMPRESA" ? cnpj : null,
+            razao_social: perfil === "EMPRESA" ? razaoSocial : null,
+            ramo_atuacao: perfil === "EMPRESA" ? ramoAtuacao : null,
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      Alert.alert("Sucesso 🎉", "Conta criada! Verifique seu e-mail se a confirmação estiver ativa.");
+      router.replace("/auth/entrar" as Href);
+    } catch (error: any) {
+      Alert.alert("Erro no Cadastro", error.message || "Ocorreu um erro inesperado.");
+    } finally {
+      setCarregando(false);
+    }
   }
 
   return (
@@ -62,7 +88,8 @@ export default function TelaCadastro() {
         )}
 
         <Button 
-          title="Finalizar Cadastro" 
+          title={carregando ? "Carregando..." : "Finalizar Cadastro"} 
+          disabled={carregando}
           style={perfil === 'EMPRESA' ? { backgroundColor: '#191919', marginTop: 15 } : { backgroundColor: '#0A66C2', marginTop: 15 }} 
           onPress={handleConcluir} 
         />

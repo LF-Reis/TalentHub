@@ -1,13 +1,74 @@
-import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View, Alert } from "react-native";
+import { useState, useEffect } from "react";
+import { ScrollView, StyleSheet, Text, View, Alert, ActivityIndicator } from "react-native";
 import Header from "@/src/componentes/ui/Header";
 import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
+import { supabase } from "@/src/lib/supabase";
 
 export default function PerfilCandidato() {
-  const [bio, setBio] = useState('Desenvolvedor focado em soluções mobile com React Native.');
-  const [habilidades, setHabilidades] = useState('TypeScript, React Native, Expo');
-  const [pdfNome, setPdfNome] = useState('Curriculo_Luiz_2026.pdf');
+  const [bio, setBio] = useState('');
+  const [habilidades, setHabilidades] = useState('');
+  const [pdfNome, setPdfNome] = useState('Nenhum currículo enviado');
+  const [carregando, setCarregando] = useState(true);
+  const [salvando, setSalvando] = useState(false);
+
+  useEffect(() => {
+    async function carregarPerfil() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from('perfis')
+          .select('bio, habilidades')
+          .eq('id', user.id)
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          setBio(data.bio || '');
+          setHabilidades(data.habilidades || '');
+        }
+      } catch (error: any) {
+        Alert.alert("Erro", "Não foi possível carregar os dados do perfil.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarPerfil();
+  }, []);
+
+  async function salvarPerfil() {
+    setSalvando(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('perfis')
+        .update({ bio, habilidades })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      Alert.alert("Sucesso 🎉", "Perfil atualizado com sucesso!");
+    } catch (error: any) {
+      Alert.alert("Erro ao salvar", error.message);
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  if (carregando) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#0A66C2" />
+        <Text style={{ marginTop: 10, color: '#666' }}>Carregando perfil...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container} bounces={false}>
@@ -15,15 +76,19 @@ export default function PerfilCandidato() {
       
       <View style={styles.corpo}>
         <Input label="Biografia (Sobre Mim)" value={bio} onChangeText={setBio} multiline />
-        <Input label="Habilidades Técnicas" value={habilidades} onChangeText={setHabilidades} />
+        <Input label="Habilidades Técnicas" value={habilidades} onChangeText={setHabilidades} placeholder="Ex: React Native, TypeScript..." />
         
         <Text style={styles.labelCustom}>Seu Currículo (PDF)</Text>
         <View style={styles.boxUpload}>
           <Text style={styles.textoPdf}>📄 {pdfNome}</Text>
-          <Button title="Substituir" style={{ width: 100, padding: 8 }} onPress={() => setPdfNome("Novo_Curriculo.pdf")} />
+          <Button title="Substituir" style={{ width: 100, padding: 8 }} onPress={() => alert("Upload de PDF será implementado em breve!")} />
         </View>
 
-        <Button title="Salvar Alterações" onPress={() => Alert.alert("Sucesso", "Perfil atualizado!")} />
+        <Button 
+          title={salvando ? "Salvando..." : "Salvar Alterações"} 
+          disabled={salvando}
+          onPress={salvarPerfil} 
+        />
       </View>
     </ScrollView>
   );

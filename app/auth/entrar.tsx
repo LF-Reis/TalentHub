@@ -1,23 +1,54 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Image } from "react-native";
 import { useRouter, Href } from "expo-router";
-import { FontAwesome5 } from "@expo/vector-icons";
 import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
+import { supabase } from "@/src/lib/supabase"; 
+
+const TalentHubLogo = require('@/assets/images/talenthub_logo.png');
 
 export default function TelaEntrar() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [tipoUsuario, setTipoUsuario] = useState<"candidato" | "empresa">("candidato");
+  const [carregando, setCarregando] = useState(false);
 
-  function handleLogin() {
+  async function handleLogin() {
     if (!email || !senha) return Alert.alert("Erro", "Preencha todos os campos.");
     
-    if (tipoUsuario === "empresa") {
-      router.replace("/empresa/dashboard" as Href);
-    } else {
-      router.replace("/home" as Href);
+    setCarregando(true);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: senha,
+      });
+
+      if (error) throw error;
+
+      const perfilDoBanco = data.user?.user_metadata?.role;
+
+      if (tipoUsuario === "empresa" && perfilDoBanco !== "EMPRESA") {
+        await supabase.auth.signOut(); // Desloga o usuário imediatamente
+        return Alert.alert("Acesso Negado", "Esta conta está registrada como Candidato. Mude a aba acima.");
+      }
+
+      if (tipoUsuario === "candidato" && perfilDoBanco !== "CANDIDATO") {
+        await supabase.auth.signOut(); // Desloga o usuário imediatamente
+        return Alert.alert("Acesso Negado", "Esta conta está registrada como Empresa. Mude a aba acima.");
+      }
+
+      if (tipoUsuario === "empresa") {
+        router.replace("/empresa/dashboard" as Href);
+      } else {
+        router.replace("/home" as Href);
+      }
+
+    } catch (error: any) {
+      Alert.alert("Erro no Login", error.message || "E-mail ou senha incorretos.");
+    } finally {
+      setCarregando(false);
     }
   }
 
@@ -26,10 +57,7 @@ export default function TelaEntrar() {
       <View style={styles.card}>
         
         <View style={styles.logoContainer}>
-          <View style={[styles.iconeBg, tipoUsuario === 'empresa' ? {backgroundColor: '#191919'} : {backgroundColor: '#0A66C2'}]}>
-            <FontAwesome5 name={tipoUsuario === 'empresa' ? "building" : "rocket"} size={26} color="#FFF" />
-          </View>
-          
+          <Image source={TalentHubLogo} style={styles.logoImagem} resizeMode="contain" />
           <Text style={styles.titulo}>TalentHub</Text>
           <Text style={styles.subtitulo}>Faça login para continuar</Text>
         </View>
@@ -47,7 +75,8 @@ export default function TelaEntrar() {
         <Input label="Senha" placeholder="••••••••" value={senha} onChangeText={setSenha} secureTextEntry />
         
         <Button 
-          title="Entrar na Plataforma" 
+          title={carregando ? "Conectando..." : "Entrar na Plataforma"} 
+          disabled={carregando}
           style={tipoUsuario === 'empresa' ? { backgroundColor: '#191919', marginTop: 10 } : { backgroundColor: '#0A66C2', marginTop: 10 }} 
           onPress={handleLogin} 
         />
