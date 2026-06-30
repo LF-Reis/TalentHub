@@ -1,38 +1,76 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, Image } from "react-native";
 import { useRouter, Href } from "expo-router";
+import { FontAwesome5 } from "@expo/vector-icons";
 import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
 
 export default function TelaCadastro() {
   const router = useRouter();
   const [perfil, setPerfil] = useState<"CANDIDATO" | "EMPRESA">("CANDIDATO");
+  
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  
   const [cnpj, setCnpj] = useState("");
+  const [razaoSocial, setRazaoSocial] = useState("");
+  const [ramoAtuacao, setRamoAtuacao] = useState("");
+
+  function handleConcluir() {
+    if (!nome || !email || !senha) return Alert.alert("Erro", "Preencha os dados básicos.");
+    if (perfil === "EMPRESA" && (!cnpj || !razaoSocial)) return Alert.alert("Erro", "CNPJ e Razão Social são obrigatórios.");
+
+    Alert.alert("Sucesso", "Conta criada! Faça login para entrar.");
+    router.replace("/auth/entrar" as Href);
+  }
 
   return (
-    <ScrollView contentContainerStyle={styles.container} bounces={false}>
+    <ScrollView contentContainerStyle={styles.container} bounces={false} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
-        <Text style={styles.titulo}>Criar Nova Conta</Text>
+        
+        <View style={styles.logoContainer}>
+          <View style={[styles.iconeBg, perfil === 'EMPRESA' ? {backgroundColor: '#191919'} : {backgroundColor: '#0A66C2'}]}>
+             <FontAwesome5 name={perfil === 'EMPRESA' ? "building" : "user-astronaut"} size={26} color="#FFF" />
+          </View>
+          <Text style={styles.titulo}>Criar Nova Conta</Text>
+          <Text style={styles.subtitulo}>Junte-se ao TalentHub hoje mesmo</Text>
+        </View>
 
         <View style={styles.containerAbas}>
-          <TouchableOpacity style={[styles.aba, perfil === "CANDIDATO" && { backgroundColor: '#E8F4FF' }]} onPress={() => setPerfil("CANDIDATO")}>
-            <Text style={{ fontSize: 12, fontWeight: 'bold', color: perfil === 'CANDIDATO' ? '#0A66C2' : '#666' }}>👤 Candidato</Text>
+          <TouchableOpacity style={[styles.aba, perfil === "CANDIDATO" && styles.abaAtivaCandidato]} onPress={() => setPerfil("CANDIDATO")}>
+            <Text style={[styles.textoAba, perfil === 'CANDIDATO' && {color: '#0A66C2'}]}>👤 Sou Candidato</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.aba, perfil === "EMPRESA" && { backgroundColor: '#EAEAEA' }]} onPress={() => setPerfil("EMPRESA")}>
-            <Text style={{ fontSize: 12, fontWeight: 'bold', color: perfil === 'EMPRESA' ? '#191919' : '#666' }}>🏢 Empresa</Text>
+          <TouchableOpacity style={[styles.aba, perfil === "EMPRESA" && styles.abaAtivaEmpresa]} onPress={() => setPerfil("EMPRESA")}>
+            <Text style={[styles.textoAba, perfil === 'EMPRESA' && {color: '#191919'}]}>🏢 Sou Empresa</Text>
           </TouchableOpacity>
         </View>
 
-        <Input label="Nome" value={nome} onChangeText={setNome} />
-        <Input label="E-mail" value={email} onChangeText={setEmail} autoCapitalize="none" />
+        <Input label={perfil === "CANDIDATO" ? "Nome Completo" : "Nome do Responsável"} value={nome} onChangeText={setNome} placeholder="Digite aqui..." />
+        <Input label="E-mail de Acesso" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="exemplo@email.com" />
+        <Input label="Crie uma Senha" value={senha} onChangeText={setSenha} secureTextEntry placeholder="Mínimo 6 caracteres" />
 
         {perfil === "EMPRESA" && (
-          <Input label="CNPJ Corporativo" value={cnpj} onChangeText={setCnpj} keyboardType="numeric" />
+          <View style={styles.blocoEmpresa}>
+            <View style={styles.divisor} />
+            <Text style={styles.tituloSecao}>Dados Corporativos</Text>
+            
+            <Input label="CNPJ Corporativo" value={cnpj} onChangeText={setCnpj} keyboardType="numeric" placeholder="00.000.000/0001-00" />
+            <Input label="Razão Social" value={razaoSocial} onChangeText={setRazaoSocial} placeholder="Ex: TechCorp Soluções S/A" />
+            <Input label="Ramo de Atuação (Opcional)" value={ramoAtuacao} onChangeText={setRamoAtuacao} placeholder="Ex: Tecnologia e Softwares" />
+          </View>
         )}
 
-        <Button title="Concluir" style={perfil === 'EMPRESA' ? { backgroundColor: '#191919' } : { backgroundColor: '#0A66C2' }} onPress={() => { Alert.alert("Sucesso", "Conta criada!"); router.replace("/entrar" as Href); }} />
+        <Button 
+          title="Finalizar Cadastro" 
+          style={perfil === 'EMPRESA' ? { backgroundColor: '#191919', marginTop: 15 } : { backgroundColor: '#0A66C2', marginTop: 15 }} 
+          onPress={handleConcluir} 
+        />
+
+        <TouchableOpacity style={styles.linkRodape} onPress={() => router.back()}>
+          <Text style={styles.textoLink}>Já possui cadastro? <Text style={styles.destaqueLink}>Fazer Login</Text></Text>
+        </TouchableOpacity>
+
       </View>
     </ScrollView>
   );
@@ -43,31 +81,97 @@ const styles = StyleSheet.create({
     flexGrow: 1, 
     backgroundColor: "#F3F2EF", 
     justifyContent: "center", 
-    padding: 20 
+    padding: 20,
+    paddingVertical: 50,
   },
   card: { 
     backgroundColor: "#FFF", 
-    borderRadius: 16, 
-    padding: 24 
+    borderRadius: 24, 
+    padding: 28,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.08,
+    shadowRadius: 15,
+    elevation: 8,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  iconeBg: {
+    width: 60,
+    height: 60,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   titulo: { 
-    fontSize: 20, 
-    fontWeight: "bold", 
+    fontSize: 24, 
+    fontWeight: "800", 
     color: "#191919", 
-    textAlign: "center", 
-    marginBottom: 20 
+    textAlign: "center",
+    letterSpacing: -0.5,
+  },
+  subtitulo: {
+    fontSize: 14,
+    color: "#777",
+    marginTop: 4,
   },
   containerAbas: { 
     flexDirection: "row", 
-    gap: 10, 
-    marginBottom: 20 
+    gap: 12, 
+    marginBottom: 24 
   },
   aba: { 
     flex: 1, 
-    paddingVertical: 12, 
+    paddingVertical: 14, 
     alignItems: "center",
-    borderRadius: 10, 
-    borderWidth: 1, 
-    borderColor: "#DCDCDC" 
+    borderRadius: 12, 
+    borderWidth: 1.5, 
+    borderColor: "#E5E7EB",
+    backgroundColor: "#FAFAFA"
   },
+  abaAtivaCandidato: {
+    borderColor: "#0A66C2",
+    backgroundColor: "#E8F4FF",
+  },
+  abaAtivaEmpresa: {
+    borderColor: "#191919",
+    backgroundColor: "#F3F4F6",
+  },
+  textoAba: {
+    fontSize: 13, 
+    fontWeight: 'bold',
+    color: '#888'
+  },
+  blocoEmpresa: {
+    marginTop: 5,
+  },
+  divisor: {
+    height: 1,
+    backgroundColor: "#E5E7EB",
+    marginVertical: 15,
+  },
+  tituloSecao: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#191919",
+    marginBottom: 15,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  linkRodape: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 8,
+  },
+  textoLink: { 
+    color: '#666', 
+    fontSize: 14 
+  },
+  destaqueLink: { 
+    color: '#0A66C2', 
+    fontWeight: 'bold' 
+  }
 });
