@@ -70,42 +70,40 @@ export default function TriagemCandidatos() {
       <Header titulo="Candidatos Inscritos" subtitulo={`Vaga: ${vagaTitulo}`} theme="dark" />
 
       <View style={styles.corpo}>
-        {carregando ? (
+{carregando ? (
           <ActivityIndicator size="large" color="#191919" style={{ marginTop: 40 }} />
         ) : candidatos.length === 0 ? (
           <Text style={styles.textoVazio}>Nenhum candidato inscrito nesta vaga até o momento.</Text>
         ) : (
-          candidatos.map((cand) => (
-            <View key={cand.id} style={styles.cardCandidato}>
-              <View style={styles.topoCard}>
-                <Text style={styles.nome}>{cand.perfis?.nome || "Candidato Oculto"}</Text>
-                <Text style={[styles.statusBadge, cand.status === 'APROVADO' ? styles.badgeAprovado : cand.status === 'REPROVADO' ? styles.badgeReprovado : styles.badgeEnviado]}>
-                  {cand.status}
-                </Text>
+          <>
+            {candidatos.map((cand) => (
+              <View key={cand.id} style={styles.cardCandidato}>
+                <View style={styles.topoCard}>
+                  <Text style={styles.nome}>{cand.perfis?.nome || "Candidato Oculto"}</Text>
+                  <Text style={[styles.statusBadge, cand.status === 'APROVADO' ? styles.badgeAprovado : cand.status === 'REPROVADO' ? styles.badgeReprovado : styles.badgeEnviado]}>
+                    {cand.status}
+                  </Text>
+                </View>
+
+                <Text style={styles.subTitulo}>💡 Resumo/Bio:</Text>
+                <Text style={styles.txtBio}>{cand.perfis?.bio || "Nenhuma biografia fornecida."}</Text>
+
+                <Text style={styles.subTitulo}>🛠️ Habilidades:</Text>
+                <Text style={styles.habs}>{cand.perfis?.habilidades || "Não especificadas"}</Text>
+
+                <Button title="📄 Ver Currículo (PDF)" style={{ padding: 10, marginVertical: 12, backgroundColor: '#E0E0E0' }} textStyle={{ color: '#333' }} onPress={() => alert("Visualização de PDF indisponível.")} />
+
+                <View style={styles.botoesStatus}>
+                  <TouchableOpacity style={[styles.btn, { backgroundColor: '#E2F6EA' }]} onPress={() => mudarStatus(cand.id, 'APROVADO')}>
+                    <Text style={{ color: '#1e7e34', fontWeight: 'bold', fontSize: 12 }}>Aprovar Candidato</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.btn, { backgroundColor: '#F8D7DA' }]} onPress={() => mudarStatus(cand.id, 'REPROVADO')}>
+                    <Text style={{ color: '#721c24', fontWeight: 'bold', fontSize: 12 }}>Reprovar</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-
-              <Text style={styles.subTitulo}>💡 Resumo/Bio:</Text>
-              <Text style={styles.txtBio}>{cand.perfis?.bio || "Nenhuma biografia fornecida."}</Text>
-
-              <Text style={styles.subTitulo}>🛠️ Habilidades:</Text>
-              <Text style={styles.habs}>{cand.perfis?.habilidades || "Não especificadas"}</Text>
-
-              <TouchableOpacity
-                style={{ padding: 12, marginVertical: 12, backgroundColor: '#E0E0E0', borderRadius: 8, alignItems: 'center' }}
-                onPress={() => alert("Visualização de PDF indisponível.")}
-              >
-                <Text style={{ color: '#333', fontWeight: 'bold' }}>📄 Ver Currículo (PDF)</Text>
-              </TouchableOpacity>
-              <View style={styles.botoesStatus}>
-                <TouchableOpacity style={[styles.btn, { backgroundColor: '#E2F6EA' }]} onPress={() => mudarStatus(cand.id, 'APROVADO')}>
-                  <Text style={{ color: '#1e7e34', fontWeight: 'bold', fontSize: 12 }}>Aprovar Candidato</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn, { backgroundColor: '#F8D7DA' }]} onPress={() => mudarStatus(cand.id, 'REPROVADO')}>
-                  <Text style={{ color: '#721c24', fontWeight: 'bold', fontSize: 12 }}>Reprovar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))
+            ))}
+          </>
         )}
       </View>
     </ScrollView>

@@ -5,8 +5,6 @@ import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
 import { supabase } from "@/src/lib/supabase"; 
 
-const TalentHubLogo = require('@/assets/images/talenthub_logo.png');
-
 export default function TelaEntrar() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -57,7 +55,6 @@ export default function TelaEntrar() {
       <View style={styles.card}>
         
         <View style={styles.logoContainer}>
-          <Image source={TalentHubLogo} style={styles.logoImagem} resizeMode="contain" />
           <Text style={styles.titulo}>TalentHub</Text>
           <Text style={styles.subtitulo}>Faça login para continuar</Text>
         </View>

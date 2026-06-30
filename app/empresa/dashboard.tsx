@@ -118,27 +118,29 @@ export default function DashboardEmpresa() {
 
         <Text style={styles.tituloSecao}>Suas Vagas Publicadas</Text>
 
-        {carregando ? (
+{carregando ? (
           <ActivityIndicator size="large" color="#191919" style={{ marginVertical: 20 }} />
         ) : vagas.length === 0 ? (
           <Text style={styles.textoVazio}>Você ainda não publicou nenhuma vaga.</Text>
         ) : (
-          vagas.map((vaga) => (
-            <TouchableOpacity 
-              key={vaga.id} 
-              onPress={() => router.push({
-                pathname: '/empresa/candidatos',
-                params: { id: vaga.id, titulo: vaga.titulo }
-              } as any)}
-            >
-              <CardVaga 
-                titulo={vaga.titulo} 
-                subinfo={`${vaga.candidaturas?.length || 0} Candidato(s)`} 
-                local={vaga.local} 
-                tag={vaga.tipo} 
-              />
-            </TouchableOpacity>
-          ))
+          <>
+            {vagas.map((vaga) => (
+              <TouchableOpacity 
+                key={vaga.id} 
+                onPress={() => router.push({
+                  pathname: '/empresa/candidatos',
+                  params: { id: vaga.id, titulo: vaga.titulo }
+                } as any)}
+              >
+                <CardVaga 
+                  titulo={vaga.titulo} 
+                  subinfo={`${vaga.candidaturas?.length || 0} Candidato(s)`} 
+                  local={vaga.local} 
+                  tag={vaga.tipo} 
+                />
+              </TouchableOpacity>
+            ))}
+          </>
         )}
 
         <Button 

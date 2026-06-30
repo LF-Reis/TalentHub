@@ -1,16 +1,21 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, StyleProp, TextStyle } from "react-native";
 import { ButtonProps } from "../../types";
 
 export default function Button({
   title,
   variant = "primary",
   style,
+  textStyle,
   ...rest
 }: ButtonProps) {
   return (
     <TouchableOpacity style={[styles.botao, styles[variant], style]} {...rest}>
       <Text
-        style={[styles.texto, variant === "secondary" && styles.textoSecondary]}
+        style={[
+          styles.texto, 
+          variant === "secondary" && styles.textoSecondary,
+          textStyle
+        ]}
       >
         {title}
       </Text>

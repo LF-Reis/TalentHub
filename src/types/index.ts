@@ -1,5 +1,4 @@
-import { TextInputProps, TouchableOpacityProps } from "react-native";
-
+import { TextInputProps, TouchableOpacityProps, StyleProp, TextStyle } from "react-native";
 
 export type FooterProps = {
   abaAtiva: 'inicio' | 'candidaturas' | 'perfil' | 'painel';
@@ -14,6 +13,7 @@ export type InputProps = TextInputProps & {
 export type ButtonProps = TouchableOpacityProps & {
   title: string;
   variant?: 'primary' | 'secondary' | 'danger';
+  textStyle?: StyleProp<TextStyle>;
 };
 
 export type HeaderProps = {
