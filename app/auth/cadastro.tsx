@@ -5,6 +5,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
 import { supabase } from "@/src/lib/supabase"; 
+
+
 export default function TelaCadastro() {
   const router = useRouter();
   const [perfil, setPerfil] = useState<"CANDIDATO" | "EMPRESA">("CANDIDATO");
@@ -51,7 +53,7 @@ export default function TelaCadastro() {
     }
   }
 
-  return (
+return (
     <ScrollView contentContainerStyle={styles.container} bounces={false} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
         
@@ -72,18 +74,18 @@ export default function TelaCadastro() {
           </TouchableOpacity>
         </View>
 
-        <Input label={perfil === "CANDIDATO" ? "Nome Completo" : "Nome do Responsável"} value={nome} onChangeText={setNome} placeholder="Digite aqui..." />
-        <Input label="E-mail de Acesso" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="exemplo@email.com" />
-        <Input label="Crie uma Senha" value={senha} onChangeText={setSenha} secureTextEntry placeholder="Mínimo 6 caracteres" />
+        <Input iconName={perfil === "CANDIDATO" ? "user" : "user-tie"} label={perfil === "CANDIDATO" ? "Nome Completo" : "Nome do Responsável"} value={nome} onChangeText={setNome} placeholder="Digite aqui..." />
+        <Input iconName="envelope" label="E-mail de Acesso" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="exemplo@email.com" />
+        <Input iconName="lock" label="Crie uma Senha" value={senha} onChangeText={setSenha} placeholder="Mínimo 6 caracteres"isPassword/>
 
         {perfil === "EMPRESA" && (
           <View style={styles.blocoEmpresa}>
             <View style={styles.divisor} />
             <Text style={styles.tituloSecao}>Dados Corporativos</Text>
             
-            <Input label="CNPJ Corporativo" value={cnpj} onChangeText={setCnpj} keyboardType="numeric" placeholder="00.000.000/0001-00" />
-            <Input label="Razão Social" value={razaoSocial} onChangeText={setRazaoSocial} placeholder="Ex: TechCorp Soluções S/A" />
-            <Input label="Ramo de Atuação (Opcional)" value={ramoAtuacao} onChangeText={setRamoAtuacao} placeholder="Ex: Tecnologia e Softwares" />
+            <Input iconName="id-card" label="CNPJ Corporativo" value={cnpj} onChangeText={setCnpj} keyboardType="numeric" placeholder="00.000.000/0001-00" />
+            <Input iconName="building" label="Razão Social" value={razaoSocial} onChangeText={setRazaoSocial} placeholder="Ex: TechCorp Soluções S/A" />
+            <Input iconName="briefcase" label="Ramo de Atuação (Opcional)" value={ramoAtuacao} onChangeText={setRamoAtuacao} placeholder="Ex: Tecnologia e Softwares" />
           </View>
         )}
 

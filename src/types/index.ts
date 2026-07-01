@@ -8,6 +8,8 @@ export type FooterProps = {
 export type InputProps = TextInputProps & {
   label: string;
   multiline?: boolean;
+  iconName?: string;
+  isPassword?: boolean;
 };
 
 export type ButtonProps = TouchableOpacityProps & {

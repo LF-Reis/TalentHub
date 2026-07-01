@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, ActivityIndicator, FlatList } from "react-native";
+import { useRouter, Href } from "expo-router"; // 1. IMPORTADO O HREF AQUI
 import Header from "@/src/componentes/ui/Header";
 import CardVaga from "@/src/componentes/ui/CardVaga";
 import { supabase } from "@/src/lib/supabase";
@@ -15,6 +16,7 @@ interface Vaga {
 }
 
 export default function HomeCandidato() {
+  const router = useRouter();
   const [busca, setBusca] = useState('');
   const [filtroTipo, setFiltroTipo] = useState<string | null>(null);
   const [vagas, setVagas] = useState<Vaga[]>([]);
@@ -41,33 +43,6 @@ export default function HomeCandidato() {
     buscarVagas();
   }, []);
 
-  async function handleCandidatar(vagaId: number, tituloVaga: string) {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        return Alert.alert("Atenção", "Você precisa estar logado para se candidatar.");
-      }
-
-      const { error } = await supabase
-        .from('candidaturas')
-        .insert([
-          { vaga_id: vagaId, candidato_id: user.id }
-        ]);
-
-      if (error) {
-        if (error.code === '23505') {
-          return Alert.alert("Aviso", "Você já se inscreveu nesta vaga anteriormente!");
-        }
-        throw error;
-      }
-
-      Alert.alert("Sucesso 🎉", `Inscrição realizada para: ${tituloVaga}`);
-    } catch (error: any) {
-      Alert.alert("Erro", error.message || "Não foi possível concluir a candidatura.");
-    }
-  }
-
   const vagasFiltradas = vagas.filter(vaga => {
     const bateTexto = vaga.titulo.toLowerCase().includes(busca.toLowerCase()) || vaga.empresa.toLowerCase().includes(busca.toLowerCase());
     const bateTipo = filtroTipo ? vaga.tipo === filtroTipo : true;
@@ -76,53 +51,62 @@ export default function HomeCandidato() {
 
   const tiposFiltro = ["CLT", "Estágio", "PJ", "Remoto"];
 
+  const renderHeader = () => (
+    <>
+      <TextInput 
+        style={styles.inputBusca} 
+        placeholder="🔍 Buscar por cargo ou empresa..." 
+        placeholderTextColor="#999"
+        value={busca}
+        onChangeText={setBusca}
+      />
+
+      <View style={styles.containerFiltros}>
+        {tiposFiltro.map((tipo) => (
+          <TouchableOpacity 
+            key={tipo} 
+            style={[styles.botaoFiltro, filtroTipo === tipo && styles.botaoFiltroAtivo]}
+            onPress={() => setFiltroTipo(filtroTipo === tipo ? null : tipo)}
+          >
+            <Text style={[styles.textoFiltro, filtroTipo === tipo && styles.textoFiltroAtivo]}>{tipo}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Text style={styles.tituloSecao}>Vagas Disponíveis ({vagasFiltradas.length})</Text>
+    </>
+  );
+
   return (
-    <ScrollView 
-      style={styles.container} 
-      bounces={false}
-      onScrollEndDrag={buscarVagas} 
-    >
+    <View style={styles.container}>
       <Header titulo="Olá, Desenvolvedor! 👋" subtitulo="Encontre a oportunidade ideal para sua carreira" theme="blue" />
 
-      <View style={styles.corpo}>
-        <TextInput 
-          style={styles.inputBusca} 
-          placeholder="🔍 Buscar por cargo ou empresa..." 
-          placeholderTextColor="#999"
-          value={busca}
-          onChangeText={setBusca}
-        />
-
-        <View style={styles.containerFiltros}>
-          {tiposFiltro.map((tipo) => (
-            <TouchableOpacity 
-              key={tipo} 
-              style={[styles.botaoFiltro, filtroTipo === tipo && styles.botaoFiltroAtivo]}
-              onPress={() => setFiltroTipo(filtroTipo === tipo ? null : tipo)}
-            >
-              <Text style={[styles.textoFiltro, filtroTipo === tipo && styles.textoFiltroAtivo]}>{tipo}</Text>
-            </TouchableOpacity>
-          ))}
+      {carregando ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0A66C2" />
+          <Text style={styles.textLoading}>Buscando vagas no banco...</Text>
         </View>
-
-        <Text style={styles.tituloSecao}>Vagas Disponíveis ({vagasFiltradas.length})</Text>
-
-        {carregando ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0A66C2" />
-            <Text style={styles.textLoading}>Buscando vagas no banco...</Text>
-          </View>
-        ) : vagasFiltradas.length === 0 ? (
-          <Text style={styles.textoVazio}>Nenhuma vaga encontrada para os filtros selecionados.</Text>
-        ) : (
-          vagasFiltradas.map((vaga) => (
-            <TouchableOpacity key={vaga.id} onPress={() => handleCandidatar(vaga.id, vaga.titulo)}>
+      ) : (
+        <FlatList
+          data={vagasFiltradas}
+          keyExtractor={(item) => String(item.id)}
+          contentContainerStyle={styles.corpo}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={renderHeader}
+          ListEmptyComponent={
+            <Text style={styles.textoVazio}>Nenhuma vaga encontrada para os filtros selecionados.</Text>
+          }
+          renderItem={({ item: vaga }) => (
+            <TouchableOpacity 
+              activeOpacity={0.7} 
+              onPress={() => router.push(`/vaga/${vaga.id}` as Href)}
+            >
               <CardVaga titulo={vaga.titulo} subinfo={vaga.empresa} local={vaga.local} tag={vaga.tipo} />
             </TouchableOpacity>
-          ))
-        )}
-      </View>
-    </ScrollView>
+          )}
+        />
+      )}
+    </View>
   );
 }
 
@@ -147,6 +131,7 @@ const styles = StyleSheet.create({
   },
   corpo: { 
     padding: 20, 
+    paddingBottom: 80,
   },
   containerFiltros: { 
     flexDirection: 'row', 

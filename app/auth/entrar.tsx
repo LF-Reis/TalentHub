@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import { useRouter, Href } from "expo-router";
 import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
@@ -13,42 +13,53 @@ export default function TelaEntrar() {
   const [carregando, setCarregando] = useState(false);
 
   async function handleLogin() {
-    if (!email || !senha) return Alert.alert("Erro", "Preencha todos os campos.");
-    
-    setCarregando(true);
+  if (!email || !senha) return Alert.alert("Erro", "Preencha todos os campos.");
+  
+  setCarregando(true);
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: senha,
-      });
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: senha,
+    });
 
-      if (error) throw error;
+    if (error) throw error;
+    if (!data.user) throw new Error("Usuário não encontrado.");
 
-      const perfilDoBanco = data.user?.user_metadata?.role;
 
-      if (tipoUsuario === "empresa" && perfilDoBanco !== "EMPRESA") {
-        await supabase.auth.signOut(); // Desloga o usuário imediatamente
-        return Alert.alert("Acesso Negado", "Esta conta está registrada como Candidato. Mude a aba acima.");
-      }
+    const { data: perfil, error: perfilError } = await supabase
+      .from('perfis')
+      .select('role')
+      .eq('id', data.user.id)
+      .single();
 
-      if (tipoUsuario === "candidato" && perfilDoBanco !== "CANDIDATO") {
-        await supabase.auth.signOut(); // Desloga o usuário imediatamente
-        return Alert.alert("Acesso Negado", "Esta conta está registrada como Empresa. Mude a aba acima.");
-      }
-
-      if (tipoUsuario === "empresa") {
-        router.replace("/empresa/dashboard" as Href);
-      } else {
-        router.replace("/home" as Href);
-      }
-
-    } catch (error: any) {
-      Alert.alert("Erro no Login", error.message || "E-mail ou senha incorretos.");
-    } finally {
-      setCarregando(false);
+    if (perfilError || !perfil) {
+      await supabase.auth.signOut();
+      return Alert.alert("Erro de Perfil", "Não foi possível encontrar o perfil desta conta no banco de dados.");
     }
+
+    if (tipoUsuario === "empresa" && perfil.role !== "EMPRESA") {
+      await supabase.auth.signOut();
+      return Alert.alert("Acesso Negado", "Esta conta está registrada como Candidato. Mude a aba acima.");
+    }
+
+    if (tipoUsuario === "candidato" && perfil.role !== "CANDIDATO") {
+      await supabase.auth.signOut();
+      return Alert.alert("Acesso Negado", "Esta conta está registrada como Empresa. Mude a aba acima.");
+    }
+
+    if (perfil.role === "EMPRESA") {
+      router.replace("/empresa/dashboard" as Href);
+    } else {
+      router.replace("/candidato/home" as Href);
+    }
+
+  } catch (error: any) {
+    Alert.alert("Erro no Login", error.message || "E-mail ou senha incorretos.");
+  } finally {
+    setCarregando(false);
   }
+}
 
   return (
     <View style={styles.container}>
@@ -68,8 +79,8 @@ export default function TelaEntrar() {
           </TouchableOpacity>
         </View>
 
-        <Input label="E-mail de Acesso" placeholder="exemplo@email.com" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
-        <Input label="Senha" placeholder="••••••••" value={senha} onChangeText={setSenha} secureTextEntry />
+        <Input iconName="envelope" label="E-mail de Acesso" placeholder="exemplo@email.com" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+        <Input iconName="lock" label="Senha" placeholder="••••••••" value={senha} onChangeText={setSenha} isPassword />
         
         <Button 
           title={carregando ? "Conectando..." : "Entrar na Plataforma"} 
