@@ -35,16 +35,16 @@ export default function TelaDetalhesVaga() {
     }
   }
 
-  async function handleCandidatar() {
+async function handleCandidatar() {
     setEnviando(true);
     try {
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError || !userData.user) throw new Error("Usuário não autenticado.");
 
       const { error } = await supabase
-        .from("inscricoes")
+        .from("candidaturas")
         .insert([
-          { vaga_id: id, candidato_id: userData.user.id, status: 'pendente' }
+          { vaga_id: id, candidato_id: userData.user.id }
         ]);
 
       if (error) {
@@ -54,7 +54,7 @@ export default function TelaDetalhesVaga() {
         throw error;
       }
 
-      Alert.alert("Sucesso! 🎉", "Sua candidatura foi enviada para a empresa.");
+      Alert.alert("Sucesso! 🎉", "Sua candidatura foi confirmada.");
       router.back();
 
     } catch (error: any) {
@@ -72,40 +72,42 @@ export default function TelaDetalhesVaga() {
     );
   }
 
-  return (
-    <ScrollView style={styles.container} bounces={false}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
-          <FontAwesome5 name="arrow-left" size={20} color="#191919" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitulo}>Detalhes da Vaga</Text>
-        <View style={{ width: 40 }} />
-      </View>
-
-      <View style={styles.conteudo}>
-        <View style={styles.cabecalhoVaga}>
-          <Text style={styles.titulo}>{vaga.titulo}</Text>
-          <Text style={styles.empresa}>{vaga.empresa}</Text>
+return (
+    <View style={styles.container}>
+      <ScrollView bounces={false} contentContainerStyle={{ paddingBottom: 100 }}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
+            <FontAwesome5 name="arrow-left" size={20} color="#191919" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitulo}>Detalhes da Vaga</Text>
+          <View style={{ width: 40 }} />
         </View>
 
-        <View style={styles.tagsContainer}>
-          <View style={styles.tag}>
-            <FontAwesome5 name="map-marker-alt" size={14} color="#666" />
-            <Text style={styles.tagText}>{vaga.local}</Text>
+        <View style={styles.conteudo}>
+          <View style={styles.cabecalhoVaga}>
+            <Text style={styles.titulo}>{vaga.titulo}</Text>
+            <Text style={styles.empresa}>{vaga.empresa}</Text>
           </View>
-          <View style={styles.tag}>
-            <FontAwesome5 name="briefcase" size={14} color="#666" />
-            <Text style={styles.tagText}>{vaga.tipo}</Text>
+
+          <View style={styles.tagsContainer}>
+            <View style={styles.tag}>
+              <FontAwesome5 name="map-marker-alt" size={14} color="#666" />
+              <Text style={styles.tagText}>{vaga.local}</Text>
+            </View>
+            <View style={styles.tag}>
+              <FontAwesome5 name="briefcase" size={14} color="#666" />
+              <Text style={styles.tagText}>{vaga.tipo}</Text>
+            </View>
+          </View>
+
+          <View style={styles.descricaoContainer}>
+            <Text style={styles.descricaoTitulo}>Sobre a vaga</Text>
+            <Text style={styles.descricaoTexto}>{vaga.descricao}</Text>
           </View>
         </View>
+      </ScrollView>
 
-        <View style={styles.descricaoContainer}>
-          <Text style={styles.descricaoTitulo}>Sobre a vaga</Text>
-          <Text style={styles.descricaoTexto}>{vaga.descricao}</Text>
-        </View>
-      </View>
-
-      <View style={styles.rodape}>
+      <View style={styles.footerFixo}>
         <Button 
           title={enviando ? "Enviando..." : "Candidatar-se agora"} 
           onPress={handleCandidatar}
@@ -113,11 +115,26 @@ export default function TelaDetalhesVaga() {
           style={{ backgroundColor: '#0A66C2' }}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({  footerFixo: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFF',
+    padding: 20,
+    paddingBottom: 30, // Dá espaço para a barra do iPhone/Android
+    borderTopWidth: 1,
+    borderColor: '#EAEAEA',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 10,
+  },
   container: {
     flex: 1,
     backgroundColor: "#F3F2EF",

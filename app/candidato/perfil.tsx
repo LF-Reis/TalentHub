@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View, Alert, ActivityIndicator } from "react-native";
+import { useRouter, Href } from "expo-router"; 
 import Header from "@/src/componentes/ui/Header";
 import Input from "@/src/componentes/ui/Input";
 import Button from "@/src/componentes/ui/Button";
 import { supabase } from "@/src/lib/supabase";
 
 export default function PerfilCandidato() {
+  const router = useRouter(); 
   const [bio, setBio] = useState('');
   const [habilidades, setHabilidades] = useState('');
   const [pdfNome, setPdfNome] = useState('Nenhum currículo enviado');
@@ -61,6 +63,20 @@ export default function PerfilCandidato() {
     }
   }
 
+  async function handleSair() {
+    Alert.alert("Terminar Sessão", "Tem a certeza que deseja sair da conta?", [
+      { text: "Cancelar", style: "cancel" },
+      { 
+        text: "Sair", 
+        style: "destructive", 
+        onPress: async () => {
+          await supabase.auth.signOut();
+          router.replace("/auth/entrar" as Href); 
+        }
+      }
+    ]);
+  }
+
   if (carregando) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -89,6 +105,12 @@ export default function PerfilCandidato() {
           disabled={salvando}
           onPress={salvarPerfil} 
         />
+
+        <Button 
+          title="Sair da Conta" 
+          onPress={handleSair} 
+          style={{ backgroundColor: '#DC3545', marginTop: 15 }} 
+        />
       </View>
     </ScrollView>
   );
@@ -100,7 +122,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F3F2EF" 
   },
   corpo: { 
-    padding: 20 
+    padding: 20,
+    paddingBottom: 100, 
   },
   labelCustom: {
     fontSize: 13,

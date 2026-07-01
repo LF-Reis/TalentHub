@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, ActivityIndicator, FlatList } from "react-native";
-import { useRouter, Href } from "expo-router"; // 1. IMPORTADO O HREF AQUI
+import { useRouter, Href } from "expo-router"; 
 import Header from "@/src/componentes/ui/Header";
 import CardVaga from "@/src/componentes/ui/CardVaga";
 import { supabase } from "@/src/lib/supabase";
