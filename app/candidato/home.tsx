@@ -49,7 +49,7 @@ export default function HomeCandidato() {
     return bateTexto && bateTipo;
   });
 
-  const tiposFiltro = ["CLT", "Estágio", "PJ", "Remoto"];
+  const tiposFiltro = ["CLT", "Estágio", "PJ"];
 
   const renderHeader = () => (
     <>
@@ -99,6 +99,7 @@ export default function HomeCandidato() {
           renderItem={({ item: vaga }) => (
             <TouchableOpacity 
               activeOpacity={0.7} 
+              style={{ marginBottom: 12 }}
               onPress={() => router.push(`/vaga/${vaga.id}` as Href)}
             >
               <CardVaga titulo={vaga.titulo} subinfo={vaga.empresa} local={vaga.local} tag={vaga.tipo} />

@@ -263,7 +263,7 @@ async function excluirVaga(id: number) {
 
             <Text style={styles.labelCustom}>Tipo de Contratação</Text>
             <View style={styles.containerTipos}>
-              {["CLT", "Estágio", "PJ", "Remoto"].map((t) => (
+              {["CLT", "Estágio", "PJ"].map((t) => (
                 <TouchableOpacity
                   key={t}
                   style={[styles.btnTipo, tipo === t && styles.btnTipoAtivo]}
