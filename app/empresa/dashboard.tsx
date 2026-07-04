@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Alert, Modal, TextInput } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Alert, Modal } from "react-native";
 import Header from "@/src/componentes/ui/Header";
 import CardVaga from "@/src/componentes/ui/CardVaga";
 import Button from "@/src/componentes/ui/Button";
@@ -22,11 +22,24 @@ export default function DashboardEmpresa() {
   const [carregando, setCarregando] = useState(true);
   const [modalAberto, setModalAberto] = useState(false);
   const [salvandoVaga, setSalvandoVaga] = useState(false);
-
+  const [modoEdicao, setModoEdicao] = useState(false);
+  const [vagaEditando, setVagaEditando] = useState<number | null>(null);
   const [titulo, setTitulo] = useState("");
   const [local, setLocal] = useState("");
-  const [tipo, setTipo] = useState("CLT"); // Default
+  const [tipo, setTipo] = useState("CLT");
   const [descricao, setDescricao] = useState("");
+
+  function editarVaga(vaga: VagaEmpresa & { descricao?: string }) {
+    setModoEdicao(true);
+    setVagaEditando(vaga.id);
+
+    setTitulo(vaga.titulo);
+    setLocal(vaga.local);
+    setTipo(vaga.tipo);
+    setDescricao((vaga as any).descricao || "");
+
+    setModalAberto(true);
+  }
 
   async function carregarDadosEmpresa() {
     try {
@@ -52,6 +65,84 @@ export default function DashboardEmpresa() {
   useEffect(() => {
     carregarDadosEmpresa();
   }, []);
+
+  async function handleEditarVaga() {
+    if (!vagaEditando) return;
+
+    setSalvandoVaga(true);
+
+    try {
+      const { error } = await supabase
+        .from("vagas")
+        .update({
+          titulo,
+          local,
+          tipo,
+          descricao,
+        })
+        .eq("id", vagaEditando);
+
+      if (error) throw error;
+
+      Alert.alert("Sucesso", "Vaga atualizada!");
+
+      setModalAberto(false);
+      setModoEdicao(false);
+      setVagaEditando(null);
+
+      setTitulo("");
+      setLocal("");
+      setTipo("CLT");
+      setDescricao("");
+
+      carregarDadosEmpresa();
+
+    } catch (error: any) {
+      Alert.alert("Erro", error.message);
+    } finally {
+      setSalvandoVaga(false);
+    }
+  }
+
+async function excluirVaga(id: number) {
+  Alert.alert(
+    "Excluir vaga",
+    "Deseja realmente excluir esta vaga? Todas as candidaturas vinculadas também serão apagadas.",
+    [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Excluir",
+        style: "destructive",
+        onPress: async () => {
+          try {
+      
+            const { error: erroCandidaturas } = await supabase
+              .from("candidaturas")
+              .delete()
+              .eq("vaga_id", id); 
+
+            if (erroCandidaturas) throw erroCandidaturas;
+            const { error: erroVaga } = await supabase
+              .from("vagas")
+              .delete()
+              .eq("id", id);
+
+            if (erroVaga) throw erroVaga;
+
+            Alert.alert("Sucesso", "Vaga excluída com sucesso.");
+            carregarDadosEmpresa();
+
+          } catch (error: any) {
+            Alert.alert("Erro ao excluir", error.message);
+          }
+        }
+      }
+    ]
+  );
+}
 
   async function handlePublicarVaga() {
     if (!titulo || !local || !descricao) {
@@ -84,12 +175,12 @@ export default function DashboardEmpresa() {
 
       Alert.alert("Sucesso 🎉", "Nova vaga publicada com sucesso!");
       setModalAberto(false);
-      
+
       setTitulo("");
       setLocal("");
       setDescricao("");
-      
-      carregarDadosEmpresa(); 
+
+      carregarDadosEmpresa();
     } catch (error: any) {
       Alert.alert("Erro ao publicar", error.message);
     } finally {
@@ -118,52 +209,64 @@ export default function DashboardEmpresa() {
 
         <Text style={styles.tituloSecao}>Suas Vagas Publicadas</Text>
 
-{carregando ? (
+        {carregando ? (
           <ActivityIndicator size="large" color="#191919" style={{ marginVertical: 20 }} />
         ) : vagas.length === 0 ? (
           <Text style={styles.textoVazio}>Você ainda não publicou nenhuma vaga.</Text>
         ) : (
           <>
             {vagas.map((vaga) => (
-              <TouchableOpacity 
-                key={vaga.id} 
-                onPress={() => router.push({
-                  pathname: '/empresa/candidatos',
-                  params: { id: vaga.id, titulo: vaga.titulo }
-                } as any)}
-              >
-                <CardVaga 
-                  titulo={vaga.titulo} 
-                  subinfo={`${vaga.candidaturas?.length || 0} Candidato(s)`} 
-                  local={vaga.local} 
-                  tag={vaga.tipo} 
+              <View key={vaga.id} style={styles.cardContainer}>
+                <CardVaga
+                  titulo={vaga.titulo}
+                  subinfo={`${vaga.candidaturas?.length || 0} Candidato(s)`}
+                  local={vaga.local}
+                  tag={vaga.tipo}
+                  onPressCard={() =>
+                    router.push({
+                      pathname: "/empresa/candidatos",
+                      params: {
+                        id: vaga.id,
+                        titulo: vaga.titulo,
+                      },
+                    } as any)
+                  }
+                  onEdit={() => editarVaga(vaga)}
+                  onDelete={() => excluirVaga(vaga.id)}
                 />
-              </TouchableOpacity>
+              </View>
             ))}
           </>
         )}
 
-        <Button 
-          title="+ Publicar Nova Vaga" 
-          style={{ backgroundColor: '#191919', marginTop: 15 }} 
-          onPress={() => setModalAberto(true)} 
-        />
+        <Button
+          title="+ Publicar Nova Vaga"
+          style={{ backgroundColor: '#191919', marginTop: 15 }}
+          onPress={() => {
+            setModoEdicao(false);
+            setVagaEditando(null);
+            setTitulo("");
+            setLocal("");
+            setTipo("CLT");
+            setDescricao("");
+            setModalAberto(true);
+          }} />
       </View>
 
       <Modal visible={modalAberto} animationType="slide" transparent={true}>
         <View style={styles.modalFundo}>
           <ScrollView contentContainerStyle={styles.modalConteudo}>
-            <Text style={styles.modalTitulo}>Nova Oportunidade</Text>
-            
+            <Text style={styles.modalTitulo}>{modoEdicao ? "Editar Vaga" : "Nova Oportunidade"}</Text>
+
             <Input label="Título do Cargo" value={titulo} onChangeText={setTitulo} placeholder="Ex: Desenvolvedor React Native Pleno" />
             <Input label="Localização" value={local} onChangeText={setLocal} placeholder="Ex: Almenara - MG ou Remoto" />
-            
+
             <Text style={styles.labelCustom}>Tipo de Contratação</Text>
             <View style={styles.containerTipos}>
               {["CLT", "Estágio", "PJ", "Remoto"].map((t) => (
-                <TouchableOpacity 
-                  key={t} 
-                  style={[styles.btnTipo, tipo === t && styles.btnTipoAtivo]} 
+                <TouchableOpacity
+                  key={t}
+                  style={[styles.btnTipo, tipo === t && styles.btnTipoAtivo]}
                   onPress={() => setTipo(t)}
                 >
                   <Text style={[styles.txtTipo, tipo === t && styles.txtTipoAtivo]}>{t}</Text>
@@ -173,13 +276,19 @@ export default function DashboardEmpresa() {
 
             <Input label="Descrição e Requisitos" value={descricao} onChangeText={setDescricao} placeholder="Descreva as responsabilidades..." multiline />
 
-            <Button 
-              title={salvandoVaga ? "Publicando..." : "Publicar Vaga"} 
+            <Button
+              title={
+                salvandoVaga
+                  ? "Salvando..."
+                  : modoEdicao
+                    ? "Salvar Alterações"
+                    : "Publicar Vaga"
+              }
               disabled={salvandoVaga}
-              style={{ backgroundColor: '#191919', marginTop: 10 }} 
-              onPress={handlePublicarVaga} 
+              style={{ backgroundColor: '#191919', marginTop: 10 }}
+              onPress={modoEdicao ? handleEditarVaga : handlePublicarVaga}
             />
-            
+
             <TouchableOpacity style={styles.btnFechar} onPress={() => setModalAberto(false)}>
               <Text style={styles.txtFechar}>Cancelar</Text>
             </TouchableOpacity>
@@ -191,106 +300,109 @@ export default function DashboardEmpresa() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#F3F2EF' 
+  container: {
+    flex: 1,
+    backgroundColor: '#F3F2EF'
   },
-  corpo: { 
-    padding: 20 
+  cardContainer: {
+    marginBottom: 20,
   },
-  tituloSecao: { 
-    fontSize: 15, 
+  corpo: {
+    padding: 20
+  },
+  tituloSecao: {
+    fontSize: 15,
     fontWeight: 'bold',
-    color: '#191919', 
-    marginBottom: 12 
+    color: '#191919',
+    marginBottom: 12
   },
-  gridMetricas: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between' 
+  gridMetricas: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
-  cardMetrica: { 
-    backgroundColor: '#FFF', 
-    width: '48%', 
-    padding: 16, 
-    borderRadius: 12, 
-    alignItems: 'center', 
-    borderWidth: 1, 
-    borderColor: '#E0E0E0' 
+  cardMetrica: {
+    backgroundColor: '#FFF',
+    width: '48%',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0'
   },
-  numeroMetrica: { 
-    fontSize: 24, 
-    fontWeight: 'bold', 
-    color: '#0A66C2' 
+  numeroMetrica: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#0A66C2'
   },
-  labelMetrica: { 
-    fontSize: 12, 
-    color: '#666', 
-    marginTop: 2 
+  labelMetrica: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 2
   },
-  textoVazio: { 
-    textAlign: 'center', 
-    color: '#888', 
-    marginVertical: 20, 
-    fontStyle: 'italic' 
+  textoVazio: {
+    textAlign: 'center',
+    color: '#888',
+    marginVertical: 20,
+    fontStyle: 'italic'
   },
-  modalFundo: { 
+  modalFundo: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
   },
-  modalConteudo: { 
+  modalConteudo: {
     backgroundColor: '#FFF',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 24,
-    paddingBottom: 40 
+    paddingBottom: 40
   },
-  modalTitulo: { 
+  modalTitulo: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#191919',
     marginBottom: 20,
     textAlign: 'center'
   },
-  labelCustom: { 
+  labelCustom: {
     fontSize: 13,
-    fontWeight: "bold", 
-    color: "#444", 
-    marginBottom: 6 
+    fontWeight: "bold",
+    color: "#444",
+    marginBottom: 6
   },
-  containerTipos: { 
-    flexDirection: 'row', 
-    gap: 8, 
-    marginBottom: 15 
+  containerTipos: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 15
   },
-  btnTipo: { 
-    flex: 1, 
-    padding: 10, 
-    borderWidth: 1, 
-    borderColor: '#CCC', 
-    borderRadius: 8, 
-    alignItems: 'center', 
-    backgroundColor: '#FAFAFA' 
+  btnTipo: {
+    flex: 1,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#CCC',
+    borderRadius: 8,
+    alignItems: 'center',
+    backgroundColor: '#FAFAFA'
   },
-  btnTipoAtivo: { 
-    backgroundColor: '#191919', 
-    borderColor: '#191919' 
+  btnTipoAtivo: {
+    backgroundColor: '#191919',
+    borderColor: '#191919'
   },
-  txtTipo: { 
-    fontSize: 12, 
-    fontWeight: 'bold', 
-    color: '#666' 
+  txtTipo: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#666'
   },
-  txtTipoAtivo: { 
-    color: '#FFF' 
+  txtTipoAtivo: {
+    color: '#FFF'
   },
-  btnFechar: { 
-    marginTop: 15, 
-    alignItems: 'center', 
-    padding: 10 
+  btnFechar: {
+    marginTop: 15,
+    alignItems: 'center',
+    padding: 10
   },
-  txtFechar: { 
-    color: '#CC0000', 
-    fontWeight: 'bold' 
+  txtFechar: {
+    color: '#CC0000',
+    fontWeight: 'bold'
   },
 });

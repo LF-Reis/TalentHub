@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Alert, TouchableOpacity } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { StyleSheet, Text, View, ScrollView, Alert, TouchableOpacity, Platform } from "react-native";
+import { useLocalSearchParams, useRouter, Href } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { supabase } from "@/src/lib/supabase";
 import Button from "@/src/componentes/ui/Button";
+import Header from "@/src/componentes/ui/Header";
 
 export default function TelaDetalhesVaga() {
   const { id } = useLocalSearchParams();
@@ -35,7 +36,7 @@ export default function TelaDetalhesVaga() {
     }
   }
 
-async function handleCandidatar() {
+  async function handleCandidatar() {
     setEnviando(true);
     try {
       const { data: userData, error: userError } = await supabase.auth.getUser();
@@ -67,36 +68,36 @@ async function handleCandidatar() {
   if (carregando || !vaga) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text>Carregando vaga...</Text>
+        <Header titulo="Carregando..." subtitulo="Aguarde um momento" theme="blue" />
       </View>
     );
   }
 
-return (
+  return (
     <View style={styles.container}>
+      <Header 
+        titulo={vaga.titulo} 
+        subtitulo={`${vaga.empresa} • 📍 ${vaga.local} • 💼 ${vaga.tipo}`} 
+        theme="blue" 
+      />
+
       <ScrollView bounces={false} contentContainerStyle={{ paddingBottom: 100 }}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
-            <FontAwesome5 name="arrow-left" size={20} color="#191919" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitulo}>Detalhes da Vaga</Text>
-          <View style={{ width: 40 }} />
-        </View>
+        
+        <TouchableOpacity style={styles.btnVoltar} onPress={() => router.back()}>
+          <FontAwesome5 name="arrow-left" size={20} color="#FFF" />
+        </TouchableOpacity>
 
         <View style={styles.conteudo}>
-          <View style={styles.cabecalhoVaga}>
-            <Text style={styles.titulo}>{vaga.titulo}</Text>
-            <Text style={styles.empresa}>{vaga.empresa}</Text>
-          </View>
-
-          <View style={styles.tagsContainer}>
-            <View style={styles.tag}>
-              <FontAwesome5 name="map-marker-alt" size={14} color="#666" />
-              <Text style={styles.tagText}>{vaga.local}</Text>
-            </View>
-            <View style={styles.tag}>
-              <FontAwesome5 name="briefcase" size={14} color="#666" />
-              <Text style={styles.tagText}>{vaga.tipo}</Text>
+          
+          <View style={styles.cardInfo}>
+            <View style={styles.infoRow}>
+              <FontAwesome5 name="money-bill-wave" size={16} color="#0A66C2" style={styles.infoIcon} />
+              <View>
+                <Text style={styles.infoLabel}>Faixa Salarial</Text>
+                <Text style={styles.infoValor}>
+                  {vaga.faixa_salarial || vaga.salario || "A combinar / Não informado"}
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -104,91 +105,82 @@ return (
             <Text style={styles.descricaoTitulo}>Sobre a vaga</Text>
             <Text style={styles.descricaoTexto}>{vaga.descricao}</Text>
           </View>
+
+          <Button 
+            title={enviando ? "Enviando..." : "Candidatar-se agora"} 
+            onPress={handleCandidatar}
+            disabled={enviando}
+            style={{ backgroundColor: '#0A66C2', marginTop: 24, borderRadius: 12 }}
+          />
         </View>
       </ScrollView>
 
-      <View style={styles.footerFixo}>
-        <Button 
-          title={enviando ? "Enviando..." : "Candidatar-se agora"} 
-          onPress={handleCandidatar}
-          disabled={enviando}
-          style={{ backgroundColor: '#0A66C2' }}
-        />
+      <View style={styles.footerAbas}>
+        <TouchableOpacity style={styles.abaItem} onPress={() => router.replace("/candidato/home" as Href)}>
+          <FontAwesome5 name="home" size={20} color="#0A66C2" />
+          <Text style={[styles.abaTexto, { color: '#0A66C2', fontWeight: 'bold' }]}>Início</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.abaItem} onPress={() => router.replace("/candidato/candidatura" as Href)}>
+          <FontAwesome5 name="briefcase" size={20} color="#666" />
+          <Text style={styles.abaTexto}>Candidaturas</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.abaItem} onPress={() => router.replace("/candidato/perfil" as Href)}>
+          <FontAwesome5 name="user" size={20} color="#666" />
+          <Text style={styles.abaTexto}>Perfil</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({  footerFixo: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#FFF',
-    padding: 20,
-    paddingBottom: 30, // Dá espaço para a barra do iPhone/Android
-    borderTopWidth: 1,
-    borderColor: '#EAEAEA',
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 10,
-  },
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F3F2EF",
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#FFF',
-  },
   btnVoltar: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 20,
+    left: 20,
     padding: 10,
-  },
-  headerTitulo: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#191919',
+    zIndex: 10,
   },
   conteudo: {
     padding: 20,
+    marginTop: 10,
   },
-  cabecalhoVaga: {
+  cardInfo: {
+    backgroundColor: '#FFF',
+    padding: 16,
+    borderRadius: 16,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  titulo: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#191919',
-    marginBottom: 8,
-  },
-  empresa: {
-    fontSize: 18,
-    color: '#0A66C2',
-    fontWeight: '600',
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 24,
-  },
-  tag: {
+  infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E8F4FF',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    gap: 6,
+    gap: 12,
   },
-  tagText: {
-    color: '#333',
+  infoIcon: {
+    width: 24,
+    textAlign: 'center',
+  },
+  infoLabel: {
+    fontSize: 12,
+    color: '#666',
     fontWeight: '500',
+  },
+  infoValor: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#191919',
+    marginTop: 2,
   },
   descricaoContainer: {
     backgroundColor: '#FFF',
@@ -211,8 +203,34 @@ const styles = StyleSheet.create({  footerFixo: {
     color: '#555',
     lineHeight: 24,
   },
-  rodape: {
-    padding: 20,
-    paddingBottom: 40,
+  footerAbas: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFF',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingBottom: Platform.OS === 'ios' ? 28 : 14, 
+    borderTopWidth: 1,
+    borderColor: '#EAEAEA',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  abaItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  abaTexto: {
+    fontSize: 11,
+    color: '#666',
+    marginTop: 4,
+    fontWeight: '500',
   }
 });

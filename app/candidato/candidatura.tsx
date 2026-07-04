@@ -51,7 +51,7 @@ export default function CandidaturasCandidato() {
       case 'APROVADO': return { texto: 'Aprovado 🎉', cor: '#1e7e34', fundo: '#E2F6EA' };
       case 'REPROVADO': return { texto: 'Não aprovado', cor: '#721c24', fundo: '#F8D7DA' };
       case 'EM_ANALISE': return { texto: 'Em Análise 📝', cor: '#856404', fundo: '#FFF3CD' };
-      default: return { texto: 'Enviado', cor: '#0C5460', fundo: '#D1ECF1' }; // ENVIADO
+      default: return { texto: 'Enviado', cor: '#0C5460', fundo: '#D1ECF1' };
     }
   }
 
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   nomeVaga: { 
-    fontSize: 22, 
+    fontSize: 20, 
     fontWeight: 'bold', 
     color: '#191919' 
   },

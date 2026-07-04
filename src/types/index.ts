@@ -29,4 +29,7 @@ export type CardVagaProps = {
   subinfo: string; 
   local: string;
   tag: string;
+  onPressCard?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };

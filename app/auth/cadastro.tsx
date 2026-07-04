@@ -11,15 +11,14 @@ export default function TelaCadastro() {
   const router = useRouter();
   const [perfil, setPerfil] = useState<"CANDIDATO" | "EMPRESA">("CANDIDATO");
   const [carregando, setCarregando] = useState(false);
-  
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  
   const [cnpj, setCnpj] = useState("");
   const [razaoSocial, setRazaoSocial] = useState("");
   const [ramoAtuacao, setRamoAtuacao] = useState("");
 
+  
   async function handleConcluir() {
     if (!nome || !email || !senha) return Alert.alert("Erro", "Preencha os dados básicos.");
     if (perfil === "EMPRESA" && (!cnpj || !razaoSocial)) return Alert.alert("Erro", "CNPJ e Razão Social são obrigatórios.");
