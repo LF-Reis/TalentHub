@@ -100,7 +100,7 @@ export default function HomeCandidato() {
             <TouchableOpacity 
               activeOpacity={0.7} 
               style={{ marginBottom: 12 }}
-              onPress={() => router.push(`/vaga/${vaga.id}` as Href)}
+              onPress={() => router.push(`/candidato/vaga/${vaga.id}` as Href)}
             >
               <CardVaga titulo={vaga.titulo} subinfo={vaga.empresa} local={vaga.local} tag={vaga.tipo} />
             </TouchableOpacity>

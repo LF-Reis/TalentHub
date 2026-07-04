@@ -28,6 +28,7 @@ export default function DashboardEmpresa() {
   const [local, setLocal] = useState("");
   const [tipo, setTipo] = useState("CLT");
   const [descricao, setDescricao] = useState("");
+  const [salario, setSalario] = useState("");
 
   function editarVaga(vaga: VagaEmpresa & { descricao?: string }) {
     setModoEdicao(true);
@@ -104,45 +105,45 @@ export default function DashboardEmpresa() {
     }
   }
 
-async function excluirVaga(id: number) {
-  Alert.alert(
-    "Excluir vaga",
-    "Deseja realmente excluir esta vaga? Todas as candidaturas vinculadas também serão apagadas.",
-    [
-      {
-        text: "Cancelar",
-        style: "cancel",
-      },
-      {
-        text: "Excluir",
-        style: "destructive",
-        onPress: async () => {
-          try {
-      
-            const { error: erroCandidaturas } = await supabase
-              .from("candidaturas")
-              .delete()
-              .eq("vaga_id", id); 
+  async function excluirVaga(id: number) {
+    Alert.alert(
+      "Excluir vaga",
+      "Deseja realmente excluir esta vaga? Todas as candidaturas vinculadas também serão apagadas.",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: async () => {
+            try {
 
-            if (erroCandidaturas) throw erroCandidaturas;
-            const { error: erroVaga } = await supabase
-              .from("vagas")
-              .delete()
-              .eq("id", id);
+              const { error: erroCandidaturas } = await supabase
+                .from("candidaturas")
+                .delete()
+                .eq("vaga_id", id);
 
-            if (erroVaga) throw erroVaga;
+              if (erroCandidaturas) throw erroCandidaturas;
+              const { error: erroVaga } = await supabase
+                .from("vagas")
+                .delete()
+                .eq("id", id);
 
-            Alert.alert("Sucesso", "Vaga excluída com sucesso.");
-            carregarDadosEmpresa();
+              if (erroVaga) throw erroVaga;
 
-          } catch (error: any) {
-            Alert.alert("Erro ao excluir", error.message);
+              Alert.alert("Sucesso", "Vaga excluída com sucesso.");
+              carregarDadosEmpresa();
+
+            } catch (error: any) {
+              Alert.alert("Erro ao excluir", error.message);
+            }
           }
         }
-      }
-    ]
-  );
-}
+      ]
+    );
+  }
 
   async function handlePublicarVaga() {
     if (!titulo || !local || !descricao) {
@@ -168,6 +169,7 @@ async function excluirVaga(id: number) {
           local,
           tipo,
           descricao,
+          faixa_salarial: salario,
           empresa: perfil?.nome || "Empresa"
         }]);
 
@@ -179,7 +181,8 @@ async function excluirVaga(id: number) {
       setTitulo("");
       setLocal("");
       setDescricao("");
-
+      setSalario("");
+      
       carregarDadosEmpresa();
     } catch (error: any) {
       Alert.alert("Erro ao publicar", error.message);
@@ -260,7 +263,8 @@ async function excluirVaga(id: number) {
 
             <Input label="Título do Cargo" value={titulo} onChangeText={setTitulo} placeholder="Ex: Desenvolvedor React Native Pleno" />
             <Input label="Localização" value={local} onChangeText={setLocal} placeholder="Ex: Almenara - MG ou Remoto" />
-
+            <Input
+              label="Faixa Salarial" value={salario} onChangeText={setSalario} placeholder="Ex: R$ 4.500,00 ou A combinar" />
             <Text style={styles.labelCustom}>Tipo de Contratação</Text>
             <View style={styles.containerTipos}>
               {["CLT", "Estágio", "PJ"].map((t) => (

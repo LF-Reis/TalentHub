@@ -114,23 +114,6 @@ export default function TelaDetalhesVaga() {
           />
         </View>
       </ScrollView>
-
-      <View style={styles.footerAbas}>
-        <TouchableOpacity style={styles.abaItem} onPress={() => router.replace("/candidato/home" as Href)}>
-          <FontAwesome5 name="home" size={20} color="#0A66C2" />
-          <Text style={[styles.abaTexto, { color: '#0A66C2', fontWeight: 'bold' }]}>Início</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.abaItem} onPress={() => router.replace("/candidato/candidatura" as Href)}>
-          <FontAwesome5 name="briefcase" size={20} color="#666" />
-          <Text style={styles.abaTexto}>Candidaturas</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.abaItem} onPress={() => router.replace("/candidato/perfil" as Href)}>
-          <FontAwesome5 name="user" size={20} color="#666" />
-          <Text style={styles.abaTexto}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -202,25 +185,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#555',
     lineHeight: 24,
-  },
-  footerAbas: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#FFF',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingBottom: Platform.OS === 'ios' ? 28 : 14, 
-    borderTopWidth: 1,
-    borderColor: '#EAEAEA',
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 10,
   },
   abaItem: {
     alignItems: 'center',
